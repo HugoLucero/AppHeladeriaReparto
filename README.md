@@ -63,7 +63,7 @@ _java -jar app-0.0.1.jar_ y presionamos enter.
 5). Una vez inicializado abrimos el navegador y accedemos a: http://localhost:8080/ 
 
 **IMPORTANTE**
-Debemos tener instalado el jdk 11 (preferible amazon corretto 11) para su ejecución.
+Debemos tener instalado el jdk 11 para su ejecución.
 
 Usuario para el sistema : admin
 Password: admin
