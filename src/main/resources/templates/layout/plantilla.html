@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:fragment="head">
+        <title>Plantilla</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    </head>
+    <body>
+        <header th:fragment="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" th:href="@{/}">
+                        <i class="fas fa-light fa-ice-cream"></i> [[#{navbar.titulo}]]
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul sec:authorize="isAuthenticated()" class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/vender/}">Ventas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/clientesInicio}">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/productosInicio}">Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/ordenesInicio}">Ordenes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/cargasInicio}">Cargas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/reportesInicio}">[[#{ti.reportes}]]</a>
+                            </li>
+                        </ul>
+                        <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
+                            <li class="nav-item mr-3">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-user"></i>
+                                    <span th:text="#{navbar.bienvenido}" >Bienvenido</span>
+                                    <span sec:authentication="name">Usuario</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="POST" th:action="@{/logout}">
+                                    <a href="#" onclick="this.parentNode.submit();" class="nav-link">
+                                        <i class="fas fa-user-times"></i> [[#{navbar.salir}]]
+                                    </a>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <footer th:fragment="footer" class="bg-dark text-white mt-1 p-1">
+            <div class="container">
+                <div class="col">
+                    <p class="lead text-center">
+                        <span> [[#{footer.pie-pagina}]] &reg;Hugo Lucero - Desarrollador Full-Stack</a></span>
+                    </p>
+                </div>
+                <br/>
+            </div>
+        </footer>
+    </body>
+</html>

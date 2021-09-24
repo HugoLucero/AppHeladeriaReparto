@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="layout/plantilla :: head">
+        <title>Agregar Ordenes</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body class="bg-dark">
+        <section th:fragment="agregarOrdenes" id="agregarOrdenes">
+            <div class="container">
+                <div class="row">
+                    <div class="card bg-dark">
+                        <div class="card-header bg-dark text-white">
+                            <h4>Crear Reportes</h4>
+                        </div>
+                        <div class="card-body bg-dark">
+                            <form th:object="${orden}" th:action="@{/agregarOrden}" method="POST">
+                                <div class="form-group">
+                                    <label for="idOrden">Orden:</label>
+                                    <input type="text" name="idOrden" th:field="*{idOrden}">
+                                    <button type="submit" class="btn btn-primary">Agregar</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="bg-dark" th:replace="reportes/detalles :: detalles"></div>
+                        <form th:action="@{/terminarInforme}" method="post">
+                            <div class="card-footer bg-dark">
+                                <button type="submit" class="btn btn-primary">Crear Reporte</button>
+                                <a th:href="@{/limpiarInforme}" class="btn btn-danger">Cancelar Reporte&nbsp;<i
+                                        class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

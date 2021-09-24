@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/plantilla :: head">
+    <title>Agregar Ordenes</title>
+    <meta charset="UTF-8" />
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<body class="bg-dark">
+    <section th:replace="layout/plantilla :: header"></section>
+    <section id="agregarOrdenes" th:fragment="agregarOrdenes">
+        <div class="container">
+            <div class="row">
+                <div class="card bg-dark">
+                    <div class="card-header bg-dark text-center text-white">
+                        <h4>Crear Reportes</h4>
+                        <div class="row justify-content-start">
+                            <a class="btn btn-light col-md-2" th:href="@{/reportesInicio}">
+                                <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                            </a>
+                        </div>
+                    </div>
+                    <div class="alert alert-secondary" role="alert"
+                        th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}" th:text="${mensaje}">
+                    </div>
+                    <!--Inicio de la tarjeta para crear los reportes-->
+                    <div class="card-body text-white bg-dark">
+                        <h4>Ventas Realizadas -></h4>
+                        <form method="POST" th:action="@{/reporte/agregarOrden}" th:object="${orden}">
+                            <div class="form-group col-md-9">
+
+                                <!-- Initialize the plugin: -->
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('#cReporte').multiselect();
+                                    });
+                                </script>
+
+                                <label for="idOrden">Orden:</label>
+                                <select class="form-select bg-dark text-white mb-3" id="cReporte" multiple="true" size="10" th:field="*{idOrden}">
+                                    <div th:each="orden : ${listarOrdenes}">
+                                        <option th:each="cliente : ${orden.clientes}" th:value="${orden.idOrden}">N°:
+                                            [[${orden.idOrden}]] || Fecha y Hora: [[${orden.fechaYHora}]] || Cliente:
+                                            [[${cliente.nombre}]] [[${cliente.apellido}]]</option>
+                                    </div>
+
+                                </select>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-plus"></i> Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="bg-dark" th:replace="reportes/detalles :: detalles"></div>
+                    <form method="post" th:action="@{/reporte/terminarInforme}">
+                        <div class="card-footer bg-dark">
+                            <button class="btn btn-success" type="submit">Crear Reporte</button>
+                            <a class="btn btn-danger" th:href="@{/reporte/limpiarInforme}">Cancelar Reporte&nbsp;<i
+                                    class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--JS MULTISELECT-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="js/bootstrap-multiselect.js" type="text/javascript"></script>
+    <link href="css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
+</body>
+<section th:replace="layout/plantilla :: footer"></section>
+</html>

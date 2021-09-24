@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Botones Carga</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="botonesAgregar" >
+            <div class="container">
+                <div class="row">
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="d-grid gap-2">
+                            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/editarExistencia/} + ${productoEdit.idProducto}"
+                               class="btn btn-info" data-bs-toggle="modal" data-bs-target="#agregarCarga">
+                                <i class="fas fa-plus"></i> [[#{accion.agregar}]]
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

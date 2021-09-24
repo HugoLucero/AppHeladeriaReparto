@@ -1,0 +1,11 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Software creado y diseñado por Hugo Lucero.
+Derechos reservados para Hugo Lucero.
+Para más información contactarse a:
+hlucerodiaz@gmail.com
+${licensePrefix}Hugo Lucero - Desarrollador Full - Stack ${licensePrefix}
+<#if licenseLast??>
+${licenseLast}
+</#if>

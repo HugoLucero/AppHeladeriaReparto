@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      >
+    <head th:replace="layout/plantilla :: head">
+        <title>Botones Index</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="botonesIndex">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md9 ">
+                        <div class="card col-md9">
+                            <div class="card-header bg-secondary text-white text-center">
+                                <h4>Sistema</h4>
+                            </div>
+                            <div class="card-body bg-dark text-white">
+                                <div class="row">
+                                    <div class="d-grid gap-2 col-6">
+                                        <a class="btn btn-success btn-lg border border-3 border-dark p-4" th:href="@{/vender/}" role="button" >
+                                            <i class="fas fa-shopping-cart"></i>   [[#{btn.ventas}]]
+                                        </a>
+                                    </div>
+                                    <div class="d-grid gap-2 col-6">
+                                        <a class="btn btn-warning btn-lg border border-3 border-dark p-4" th:href="@{/productosInicio}" role="button">
+                                            <i class="fas fa-ice-cream"></i>   [[#{btn.productos}]]
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="d-grid gap-2 col-6">
+                                        <a class="btn btn-danger btn-lg border border-3 border-dark p-4" th:href="@{/clientesInicio}" role="button">
+                                            <i class="fas fa-users"></i>   [[#{btn.clientes}]]
+                                        </a>
+                                    </div>
+                                    <div class="d-grid gap-2 col-6">
+                                        <a class="btn btn-info btn-lg border border-3 border-dark p-4" th:href="@{/ordenesInicio}" role="button" >
+                                            <i class="fas fa-file-invoice"></i>   [[#{btn.ordenes}]]
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="d-grid gap-2 col-6">
+                                        <a class="btn btn-primary btn-lg border border-3 border-dark p-4" th:href="@{/cargasInicio}" role="button" >
+                                            <i class="fas fa-truck-loading"></i>   [[#{btn.cargas}]]
+                                        </a>
+                                    </div>
+                                    <div class="d-grid gap-2 col-6">
+                                         <a class="btn btn-primary btn-lg border border-3 border-dark p-4" sec:authorize="hasRole('ROLE_ADMIN')"
+                                            th:href="@{/reportesInicio}" role="button" >
+                                                <i class="fas fa-file-invoice-dollar"></i>   [[#{btn.reportes}]]
+                                         </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

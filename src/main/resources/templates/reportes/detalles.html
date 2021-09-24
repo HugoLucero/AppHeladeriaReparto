@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="layout/plantilla :: head">
+        <title>Detalles Venta</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="detalles">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md12">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h4>Ordenes Para Crear Reporte</h4>
+                            </div>
+                            <div class="card-body bg-dark text-white">
+                                <div class="row" >
+                                    <h2 th:text="#{ti.reportes}"></h2>
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-striped table-bordered border-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Venta N°</th>
+                                                    <th>Fecha</th>
+                                                    <th>Total Productos</th>
+                                                    <th>Quitar de lista</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="orden, iterador : ${session.informe}">
+                                                    <td>[[${orden.idOrden}]]</td>
+                                                    <td>[[${orden.fechaYHora}]]</td>
+                                                    <td>[[${orden.getCant}]]</td>
+                                                    <td>
+                                                        <form th:action="@{/reporte/quitarOrden/} + ${iterador.index}" method="post">
+                                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

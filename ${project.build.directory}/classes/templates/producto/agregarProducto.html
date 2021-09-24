@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Agregar Producto</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="agregarProducto">
+            <div id="agregarProducto" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title" th:text="#{accion.agregar}">Agregar Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/guardarProducto}" th:object="${producto}" method="POST" class="was-validated">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="codigo" th:text="#{ti.codigo}">Codigo</label>
+                                    <input type="text" name="codigo" class="form-control" required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nombre" th:text="#{ti.nombre}">Nombre</label>
+                                    <input type="text" name="nombre" class="form-control" required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="marca" th:text="#{ti.marca}">Marca</label>
+                                    <input type="textl" name="marca" class="form-control" required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tipo" th:text="#{ti.tipo}">Tipo</label>
+                                    <input type="text" name="tipo" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="precio" th:text="#{ti.precio}">Precio</label>
+                                    <input type="number" name="precio" class="form-control" required="true" step="any"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="existencia" class="form-control" value="0"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit" th:text="#{accion.guardar}">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      >
+    <head th:replace="layout/plantilla :: head">
+        <title>Dalmasso Helados</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body class="bg-dark">
+        <header th:replace="layout/plantilla :: header"></header>
+        <div class="container text-center">
+            <div class="mx-auto col-10 card">
+                <div class="card-header">
+                    <h4>404 Page Not Found</h4>
+                </div>
+                <div class="card-body">
+                    <a href="/userForm" ><img src="static/img/404.png" th:src="@{/img/404.png}" width="720" height="480"/></a>
+                </div>
+            </div>	    
+        </div>
+        <div class="col align-self-start">
+            <a th:href="@{/}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+            </a>
+        </div>
+        <footer th:replace="layout/plantilla :: footer"></footer>
+    </body>
+</html>

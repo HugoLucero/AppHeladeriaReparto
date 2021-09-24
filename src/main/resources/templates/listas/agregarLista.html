@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="layout/plantilla :: head">
+        <title>Agregar Lista</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="agregarLista">
+            <div id="agregarLista" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title" th:text="#{accion.agregar}">Agregar Lista</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/guardarLista}" th:object="${lista}" method="POST" class="was-validated">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="nombreLista">Nombre de la Lista:</label>
+                                    <input type="text" name="nombre" class="form-control" required="true"/>
+                                </div>
+                                <div th:each="producto : ${productos}">
+                                    <label for="nombreLista" th:text="${producto.nombre}">Nombre</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit" th:text="#{accion.guardar}">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

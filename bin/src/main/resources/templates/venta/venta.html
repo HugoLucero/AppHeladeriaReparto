@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="layout/plantilla :: head">
+        <title>Vender</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="venta" id="ventas">
+            <section id="main-header" class="py-2 bg-dark text-white">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>
+                                <i class="fas fa-cog"></i> [[#{ti.ventas}]]
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Inicio de la Informacion de venta -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="card col-md-6 bg-dark text-white">
+                                <div class="card-header bg-secondary text-white">
+                                    <h4>[[#{ti.clientes}]]</h4>
+                                </div>
+                                <div th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}"
+                                     th:text="${mensaje}"
+                                     class="alert">
+                                </div>
+                                <div class="card-body">
+                                    <form th:object="${cliente}" th:action="@{/agregarCliente}" method="POST">
+                                        <div class="form-group">
+                                            <select th:field="*{idCliente}" class="form-select bg-dark text-white" size="5" aria-label="size 3 select example">
+                                                <option th:each="cliente : ${listarClientes}" 
+                                                        th:value="${cliente.idCliente}"
+                                                        th:text="${cliente.nombreCliente} + ' ' + ${cliente.apellidoCliente}"
+                                                        />
+                                            </select>
+                                        </div>
+                                        <div class="card-footer">
+                                            <input class="btn btn-success" type="submit" value="Agregar" name="agregar" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card col-md-6 bg-dark text-white">
+                                <div class="card-header bg-secondary text-white">
+                                    <h4>[[#{ti.productos}]]</h4>
+                                </div>
+                                <div th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}"
+                                     th:text="${mensaje}"
+                                     class="alert">
+                                </div>
+                                <div class="card-body">
+                                    <form th:object="${producto}" th:action="@{/agregarAlCarro}" method="post">
+                                        <div class="form-group">
+                                            <label for="codigo">Codigo del Helado</label>
+                                            <input th:field="*{codigo}" id="codigo"
+                                                   placeholder="Escribe el código del producto"
+                                                   type="text"
+                                                   class="form-control bg-dark text-white"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cantidad">Cantidad</label>
+                                            <input th:name="cantidad" id="cantidad"
+                                                   placeholder="Escribe la cantidad"
+                                                   type="number"
+                                                   class="form-control bg-dark text-white"/>
+                                        </div>
+                                        <input class="btn btn-success" type="submit" value="Agregar" name="agregar" />
+                                    </form>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="card bg-dark text-white">
+                            <div class="card-body">
+                                <div class="card-footer">
+                                    <form class="mb-2" th:action="@{/terminar}" method="post">
+                                        <div class="row">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" th:name="pagado" type="checkbox" id="flexSwitchCheckDefault">
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault">Pagado</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-success">Terminar&nbsp;<i class="fa fa-check"></i>
+                                            </button>
+                                            <a th:href="@{/limpiar}" class="btn btn-danger">Cancelar venta&nbsp;<i
+                                                    class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
