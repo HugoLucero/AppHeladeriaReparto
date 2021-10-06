@@ -6,6 +6,7 @@
  */
 package ar.com.dalmasso.app.util;
 
+import ar.com.dalmasso.app.domain.Orden;
 import ar.com.dalmasso.app.domain.ProductoVendido;
 import ar.com.dalmasso.app.domain.Reporte;
 import com.lowagie.text.Font;
@@ -15,12 +16,13 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
-import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,8 @@ public class ImprimirReporte extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> map, Document dcmnt, PdfWriter writer, HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
         Reporte reporte = (Reporte) map.get("reporte");
         List<ProductoVendido> prod = reporte.getProductos();
+        List<Orden> ordenes = reporte.getOrdenes();
+
         Map<Object, Double> totalProductos = prod.stream()
         .collect(Collectors.groupingBy(p -> p.getNombre(), Collectors.summingDouble(p -> p.getCantidad())));
 
@@ -84,7 +88,25 @@ public class ImprimirReporte extends AbstractPdfView {
             tablaProductos.addCell( entry.getKey().toString());
             tablaProductos.addCell(nf.format(entry.getValue()));
         }
-        
+
+        PdfPTable tituloCliente = new PdfPTable(4);
+        tituloCliente.addCell("CLIENTE");
+        tituloCliente.addCell("TOTAL");
+        tituloCliente.addCell("PAGADO");
+        tituloCliente.addCell("DEBE");
+        tablaTitulo.setSpacingAfter(10);
+
+        PdfPTable tablaClientes = new PdfPTable(4);
+       ordenes.forEach(orden -> {
+           orden.getClientes().forEach(clienteAgregado -> {
+               tablaClientes.addCell(clienteAgregado.getNombre() + " " + clienteAgregado.getApellido());
+           });
+           tablaClientes.addCell(orden.getTotal().toString());
+           tablaClientes.addCell(" ");
+           tablaClientes.addCell(" ");
+       });
+
+
 
         //Insercion al documento
         dcmnt.addTitle("Reporte");
@@ -93,6 +115,10 @@ public class ImprimirReporte extends AbstractPdfView {
         dcmnt.add(tablaTituloCabecero);
         dcmnt.add(tablaTitulos);
         dcmnt.add(tablaProductos);
+        dcmnt.newPage();
+        dcmnt.add(tituloCliente);
+        dcmnt.add(tablaClientes);
+
     }
 
 }

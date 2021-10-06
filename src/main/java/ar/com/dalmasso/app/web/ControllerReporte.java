@@ -116,7 +116,7 @@ public class ControllerReporte {
 
             @Override
             public int compare(Orden o1, Orden o2) {
-                return o1.getFechaYHora().compareToIgnoreCase(o2.getFechaYHora());
+                return o1.getIdOrden().compareTo(o2.getIdOrden());
             }
 
         }.reversed());
@@ -139,18 +139,40 @@ public class ControllerReporte {
         request.getSession().setAttribute("informe", informe);
     }
 
-    @PostMapping(value = "/agregarOrden")
-    public String agregarAlReporte(@ModelAttribute Orden orden, HttpServletRequest request, RedirectAttributes redirectAttrs) {
-        ArrayList<Orden> informe = this.obtenerOrdenes(request);
-        Orden ordenBuscadaPorId = ordenService.encontrarOrden(orden);
-        if (ordenBuscadaPorId == null) {
-            redirectAttrs
-                    .addFlashAttribute("mensaje", "Seleccione una orden de la lista.")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/reporte/";
+    // @PostMapping(value = "/agregarOrden")
+    // public String agregarAlReporte(@ModelAttribute Orden orden, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    //     ArrayList<Orden> informe = this.obtenerOrdenes(request);
+    //     Orden ordenBuscadaPorId = ordenService.encontrarOrden(orden);
+    //     if (ordenBuscadaPorId == null) {
+    //         redirectAttrs
+    //                 .addFlashAttribute("mensaje", "Seleccione una orden de la lista.")
+    //                 .addFlashAttribute("clase", "warning");
+    //         return "redirect:/reporte/";
+    //     }
+    //     informe.add(ordenBuscadaPorId);
+    //     this.guardarInforme(informe, request);
+    //     return "redirect:/reporte/";
+    // }
+
+
+    @PostMapping("/agregarOrden")
+    public String agregarAlReporte(@RequestParam(value = "listaOrden") List<Orden> orden,
+     HttpServletRequest request, RedirectAttributes rd){
+        ArrayList<Orden> reporte = this.obtenerOrdenes(request);
+        List<Orden> ordenes = ordenService.listarOrdenes();
+        if(orden == null){
+            rd
+                .addFlashAttribute("mensaje", "Seleccione una orden de la lista.")
+                .addFlashAttribute("clase", "warning");
         }
-        informe.add(ordenBuscadaPorId);
-        this.guardarInforme(informe, request);
+        for (Orden ordenId : ordenes) {
+            for (Orden orden2 : orden) {
+                if(ordenId.getIdOrden().equals(orden2.getIdOrden())){
+                    reporte.add(ordenId);
+                }
+            }
+        }
+        this.guardarInforme(reporte, request);
         return "redirect:/reporte/";
     }
 }

@@ -26,7 +26,7 @@
                         <div class="card">
                             <div class="card-header bg-secondary text-center text-white">
                                 <h4>[[#{ti.ordenes}]]</h4>
-                                <div class="row justify-content-end">
+                                <div class="row justify-content-start">
                                     <a class="btn btn-warning col-md-3" th:href="@{/vender/}">
                                         <i class="fas fa-plus"></i> Nueva Venta
                                     </a>
@@ -38,7 +38,10 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Número de Venta</th>
+                                            <th>
+                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=idOrden&sortDir=' + ${reverseSortDir}}">
+                                                Numero de Venta</a>
+                                            </th>
                                             <th th:text="#{ti.orden}">Orden</th>
                                             <th th:text="#{ti.pagado}">Pagado</th>
                                             <th></th>
@@ -73,6 +76,23 @@
                             </div>
                             <div class="text-center p-2" th:if="${ordenes == null or ordenes.empty}">
                                 <span th:text="#{productos.lista-vacia}">Lista vacia</span>
+                            </div>
+                            <div class="card-footer bg-dark text-white">
+                                <ul class="nav nav-tabs" th:if="${totalPages > 1}">
+                                    <li class="nav-item" th:each="i : ${#numbers.sequence(1, totalPages)}">
+                                        <a class="nav-link" th:if="${currentPage != i}" 
+                                        th:href="@{'/page/' + ${i} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                                        <a class="nav-link active bg-secondary text-white" th:unless="${currentPage != i }">[[${i}]]</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" th:if="${currentPages < totalPages}" th:href="@{'/page/' + ${currentPage + 1} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Siguiente</a>
+                                            <a class="nav-link" th:unless="${currentPage < totalPages}">Siguiente</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" th:if="${currentPages < totalPages}" th:href="@{'/page/' + ${totalPages} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Última</a>
+                                            <a class="nav-link" th:unless="${currentPage < totalPages}">Última</a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>

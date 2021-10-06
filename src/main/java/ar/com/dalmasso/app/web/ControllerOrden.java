@@ -9,15 +9,16 @@ package ar.com.dalmasso.app.web;
 import ar.com.dalmasso.app.domain.Orden;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import ar.com.dalmasso.app.service.IOrdenService;
 
@@ -34,18 +35,7 @@ public class ControllerOrden {
     //Métodos correspondientes para cada acción.
     @GetMapping("/ordenesInicio")
     public String Inicio(Model model){
-        
-        List<Orden> ordenes = ordenService.listarOrdenes();
-        Collections.sort(ordenes, new Comparator<Orden>() {
-
-            @Override
-            public int compare(Orden o1, Orden o2) {
-                return o1.getFechaYHora().compareToIgnoreCase(o2.getFechaYHora());
-            }
-
-        }.reversed());
-        model.addAttribute("ordenes", ordenes);
-        return "ordenesInicio";
+       return findPaginated(1, "idOrden", "asc", model);
     }
     
     @PostMapping("guardarOrden")
@@ -70,5 +60,28 @@ public class ControllerOrden {
         ordenService.eliminar(orden);
         return "redirect:/ordenesInicio";
     }
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable (value = "pageNo")int pageNo,
+        @RequestParam("sortField") String sortField,
+        @RequestParam("sortDir") String sortDir,
+        Model model){
+        int pageSize = 20;
+        Page<Orden> page = ordenService.findPaginated(pageNo, pageSize, sortField, sortDir); 
+        List<Orden> ordenes = page.getContent();
+        
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("ordenes", ordenes);
+        
+        return "ordenesInicio";
+        
+    }
        
 }
+ 

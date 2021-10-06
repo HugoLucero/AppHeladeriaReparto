@@ -6,9 +6,7 @@
  */
 package ar.com.dalmasso.app.web;
 
-import ar.com.dalmasso.app.domain.ListasDePrecio;
 import ar.com.dalmasso.app.domain.Producto;
-import ar.com.dalmasso.app.domain.ProductosListas;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import ar.com.dalmasso.app.service.IListasService;
-import ar.com.dalmasso.app.service.IProductoListaService;
 import ar.com.dalmasso.app.service.IProductoService;
 
 /**
@@ -38,8 +35,6 @@ public class ControllerProductos {
     private IProductoService productoService;
     @Autowired
     private IListasService listasService;
-    @Autowired
-    private IProductoListaService prodListaService;
 
     //Creamos las variables para Producto
     @GetMapping("/productosInicio")

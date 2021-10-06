@@ -56,20 +56,5 @@ public class ControllerReport {
         
         return "visualizarReporte";
     }
-
-
-    /**
-     * @return IReporteService return the reporteService
-     */
-    public IReporteService getReporteService() {
-        return reporteService;
-    }
-
-    /**
-     * @param reporteService the reporteService to set
-     */
-    public void setReporteService(IReporteService reporteService) {
-        this.reporteService = reporteService;
-    }
-
+  
 }

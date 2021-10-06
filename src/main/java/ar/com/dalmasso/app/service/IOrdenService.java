@@ -10,6 +10,8 @@ import ar.com.dalmasso.app.domain.Orden;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 /**
  *
  * @author Hugo Lucero - Desarrollador Full - Stack
@@ -27,4 +29,6 @@ public interface IOrdenService {
     public Orden encontrarOrdenFecha(Orden orden);
 
     public Orden encontrarOrdenPagado(Orden orden);
+
+    Page<Orden> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
 }

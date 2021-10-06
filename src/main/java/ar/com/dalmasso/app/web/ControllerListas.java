@@ -15,7 +15,6 @@ import ar.com.dalmasso.app.domain.ProductosListas;
 import ar.com.dalmasso.app.service.IListasService;
 import ar.com.dalmasso.app.service.IProductoListaService;
 import ar.com.dalmasso.app.service.IProductoService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * @author Hugo Lucero - Desarrollador Full - Stack
  */
-@Slf4j
 @Controller
 public class ControllerListas {
 

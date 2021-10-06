@@ -9,6 +9,10 @@ package ar.com.dalmasso.app.service;
 import ar.com.dalmasso.app.dao.OrdenDao;
 import ar.com.dalmasso.app.domain.Orden;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +62,15 @@ public class OrdenServiceImpl implements IOrdenService{
     @Transactional(readOnly=true)
     public Orden encontrarOrden(Orden orden) {
         return ordenDao.findById(orden.getIdOrden()).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Orden> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+            Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return this.ordenDao.findAll(pageable);
     }
 
 }

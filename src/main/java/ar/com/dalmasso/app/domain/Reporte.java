@@ -34,7 +34,7 @@ public class Reporte implements Serializable {
 
     private String observaciones;
 
-    @OneToMany(mappedBy = "reporte")
+    @OneToMany(mappedBy = "reporte", fetch = FetchType.EAGER)
     private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "reporte")
