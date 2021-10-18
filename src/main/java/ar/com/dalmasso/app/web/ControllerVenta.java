@@ -41,13 +41,11 @@ public class ControllerVenta {
     private final ClienteAgregadoDao clienteDao;
     private final IListasService listasService;
     private final ListasDePrecioDao listaDao;
-    private final ClienteDao clientDao;
-
     @Autowired
     public ControllerVenta(IProductoService productoService, IClienteService clienteService,
                            IOrdenService ordenService, ProductoVendidoDao productoDao,
                            ClienteAgregadoDao clienteDao, IListasService listasService,
-                           ListasDePrecioDao listaDao, ClienteDao clientDao) {
+                           ListasDePrecioDao listaDao) {
         this.productoService = productoService;
         this.clienteService = clienteService;
         this.ordenService = ordenService;
@@ -55,7 +53,6 @@ public class ControllerVenta {
         this.clienteDao = clienteDao;
         this.listasService = listasService;
         this.listaDao = listaDao;
-        this.clientDao = clientDao;
     }
 
     @PostMapping(value = "/quitarCliente/{indice}")
