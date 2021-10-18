@@ -25,10 +25,10 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Autowired
     private ClienteDao clienteDao;
-    
+
     @Autowired
     private OrdenDao ordenDao;
-    
+
     @Override
     @Transactional(readOnly=true)
     public List<Cliente> listarClientes() {
@@ -54,24 +54,25 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     @Transactional(readOnly=true)
-    public Cliente encontrarClienteZona(Cliente cliente) {
-        return clienteDao.findByZona(cliente.getZona());
+    public List<String> getNombre(String term) {
+        return clienteDao.getNombre(term);
     }
 
     @Override
     @Transactional(readOnly=true)
-    public Cliente encontrarClienteFreezer(Cliente cliente) {
-        return clienteDao.findByFreezer(cliente.isFreezer());
-    }
-
-    @Override
     public List<Orden> listarOrdenes() {
         return (List<Orden>)ordenDao.findAll();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Cliente encontrarClienteNombre(Cliente cliente) {
         return clienteDao.findByNombreCliente(cliente.getNombreCliente());
     }
-    
+
+    @Override
+    public List<Cliente> clienteTerm(String term) {
+        return clienteDao.findByNombreClienteLikeIgnoreCase(term);
+    }
+
 }

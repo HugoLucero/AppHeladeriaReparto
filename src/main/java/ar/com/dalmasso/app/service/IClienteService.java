@@ -29,7 +29,7 @@ public interface IClienteService {
 
     public Cliente encontrarClienteNombre(Cliente cliente);
 
-    public Cliente encontrarClienteZona(Cliente cliente);
+    public List<Cliente> clienteTerm(String term);
 
-    public Cliente encontrarClienteFreezer(Cliente cliente);
+    public List<String> getNombre(String term);
 }

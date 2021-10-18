@@ -1,15 +1,20 @@
 /*
  * Software creado y diseñado por Hugo Lucero.
-* Derechos reservados para Hugo Lucero.
-* Para más información contactarse a:
-* hlucerodiaz@gmail.com
+ * Derechos reservados para Hugo Lucero.
+ * Para más información contactarse a:
+ * hlucerodiaz@gmail.com
  */
 package ar.com.dalmasso.app.web;
 
 import ar.com.dalmasso.app.dao.ClienteAgregadoDao;
+import ar.com.dalmasso.app.dao.ClienteDao;
 import ar.com.dalmasso.app.dao.ListasDePrecioDao;
 import ar.com.dalmasso.app.dao.ProductoVendidoDao;
 import ar.com.dalmasso.app.domain.*;
+import ar.com.dalmasso.app.service.IClienteService;
+import ar.com.dalmasso.app.service.IListasService;
+import ar.com.dalmasso.app.service.IOrdenService;
+import ar.com.dalmasso.app.service.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,33 +26,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import ar.com.dalmasso.app.service.IClienteService;
-import ar.com.dalmasso.app.service.IListasService;
-import ar.com.dalmasso.app.service.IOrdenService;
-import ar.com.dalmasso.app.service.IProductoService;
 
 /**
- *
  * @author Hugo Lucero - Desarrollador Full - Stack
  */
 @Controller
 @RequestMapping(path = "/vender")
 public class ControllerVenta {
 
+    private final IProductoService productoService;
+    private final IClienteService clienteService;
+    private final IOrdenService ordenService;
+    private final ProductoVendidoDao productoDao;
+    private final ClienteAgregadoDao clienteDao;
+    private final IListasService listasService;
+    private final ListasDePrecioDao listaDao;
+    private final ClienteDao clientDao;
+
     @Autowired
-    private IProductoService productoService;
-    @Autowired
-    private IClienteService clienteService;
-    @Autowired
-    private IOrdenService ordenService;
-    @Autowired
-    private ProductoVendidoDao productoDao;
-    @Autowired
-    private ClienteAgregadoDao clienteDao;
-    @Autowired
-    private IListasService listasService;
-    @Autowired
-    private ListasDePrecioDao listaDao;
+    public ControllerVenta(IProductoService productoService, IClienteService clienteService,
+                           IOrdenService ordenService, ProductoVendidoDao productoDao,
+                           ClienteAgregadoDao clienteDao, IListasService listasService,
+                           ListasDePrecioDao listaDao, ClienteDao clientDao) {
+        this.productoService = productoService;
+        this.clienteService = clienteService;
+        this.ordenService = ordenService;
+        this.productoDao = productoDao;
+        this.clienteDao = clienteDao;
+        this.listasService = listasService;
+        this.listaDao = listaDao;
+        this.clientDao = clientDao;
+    }
 
     @PostMapping(value = "/quitarCliente/{indice}")
     public String quitarCliente(@PathVariable int indice, HttpServletRequest request) {
@@ -85,7 +94,7 @@ public class ControllerVenta {
 
     @PostMapping(value = "/terminar")
     public String terminarVenta(Orden orden, Model model, @RequestParam(value = "pagado", defaultValue = "false") boolean pagado,
-            @RequestParam(value = "modCant", defaultValue = "0") float modcant, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+                                @RequestParam(value = "modCant", defaultValue = "0") float modcant, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         ArrayList<ClienteParaAgregar> clientes = this.obtenerCliente(request);
         // Si no hay carrito o está vací­o, regresamos inmediatamente
         if (clientes == null || clientes.size() <= 0) {
@@ -141,9 +150,9 @@ public class ControllerVenta {
     public String interfazVender(Producto producto, ProductoParaVender ppv, Cliente cliente, Model model, HttpServletRequest request) {
         //Creamos la variable que itera los clientes y la ordenamos 
         List<Cliente> clientes = clienteService.listarClientes();
-        Collections.sort(clientes, new Comparator<Cliente>(){
+        Collections.sort(clientes, new Comparator<Cliente>() {
             @Override
-            public int compare(Cliente c1, Cliente c2){
+            public int compare(Cliente c1, Cliente c2) {
                 return c1.getNombreCliente().compareToIgnoreCase(c2.getNombreCliente());
             }
         });
@@ -175,10 +184,11 @@ public class ControllerVenta {
     private void guardarCarrito(ArrayList<ProductoParaVender> carrito, HttpServletRequest request) {
         request.getSession().setAttribute("carrito", carrito);
     }
+
     //Creacion del carrito
     @PostMapping(value = "/agregarAlCarro")
     public String agregarAlCarrito(@RequestParam(value = "cantidad", defaultValue = "1") float cantidad, @ModelAttribute Producto producto,
-            @RequestParam(value = "idLista", defaultValue = "") Long idLista, HttpServletRequest request, RedirectAttributes redirectAttrs, Model model) {
+                                   @RequestParam(value = "idLista", defaultValue = "") Long idLista, HttpServletRequest request, RedirectAttributes redirectAttrs, Model model) {
         //Obtenemos los productos de la session
         ArrayList<ProductoParaVender> carrito = this.obtenerCarrito(request);
         //Buscamos el producto que recibe de la vista
@@ -235,7 +245,7 @@ public class ControllerVenta {
     @PostMapping(value = "/agregarCliente")
     public String agregarCliente(@ModelAttribute Cliente cliente, Model model, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         ArrayList<ClienteParaAgregar> clientes = this.obtenerCliente(request);
-        Cliente clienteBuscadoPorNombre = clienteService.encontrarCliente(cliente);
+        Cliente clienteBuscadoPorNombre = clienteService.encontrarClienteNombre(cliente);
         if (clienteBuscadoPorNombre == null) {
             redirectAttrs
                     .addFlashAttribute("mensaje", "Seleccione un cliente de la Lista o no existe el cliente buscado")
@@ -272,16 +282,23 @@ public class ControllerVenta {
     @GetMapping(value = "/prodComAutocomplete")
     @ResponseBody
     public List<String> prodComAutocomplete(@RequestParam(value = "term", required = false, defaultValue = "") String term) {
-        List<String> sugerencias = productoService.getNombre(term);
-        return sugerencias;
+        return productoService.getNombre(term);
     }
-    
+
+    @GetMapping(value = "/clienteAutoComplete")
+    @ResponseBody
+    public List<String> clienteAutoComplete(@RequestParam(value = "term", required = false, defaultValue="")String term) {
+        return clienteService.getNombre(term);
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------
     //Métodos que generan la posibilidad modificar el precio y la cantidad del producto
     //que se encuentra en el carrito sin modificar el objeto de la base de datos.
-    
+
     @PostMapping(value = "/modificar")
     public String modificar(@RequestParam(value = "precio", required = false) Float precio, @RequestParam(value = "nombre", required = false, defaultValue = "") String nombre,
-            HttpServletRequest request) {
+                            HttpServletRequest request) {
         ArrayList<ProductoParaVender> carrito = this.obtenerCarrito(request);
         for (ProductoParaVender productoParaVender : carrito) {
             if (productoParaVender.getNombre().equals(nombre)) {
@@ -293,7 +310,7 @@ public class ControllerVenta {
 
     @PostMapping(value = "/modificarCant")
     public String modificarCantidad(@RequestParam(value = "modcant", defaultValue = "") Float modcant, @RequestParam(value = "nom", required = false, defaultValue = "") String nom,
-            HttpServletRequest request) {
+                                    HttpServletRequest request) {
         ArrayList<ProductoParaVender> carrito = this.obtenerCarrito(request);
         for (ProductoParaVender productoParaVender : carrito) {
             if (productoParaVender.getNombre().equals(nom)) {

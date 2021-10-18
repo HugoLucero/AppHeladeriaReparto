@@ -6,25 +6,32 @@
  */
 package ar.com.dalmasso.app.util;
 
-import ar.com.dalmasso.app.domain.Orden;
-import ar.com.dalmasso.app.domain.ProductoVendido;
-import ar.com.dalmasso.app.domain.Reporte;
-import com.lowagie.text.Font;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.view.document.AbstractPdfView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
+import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.view.document.AbstractPdfView;
+
+import ar.com.dalmasso.app.domain.Orden;
+import ar.com.dalmasso.app.domain.ProductoVendido;
+import ar.com.dalmasso.app.domain.Reporte;
 
 /**
  *
@@ -43,12 +50,11 @@ public class ImprimirReporte extends AbstractPdfView {
         Reporte reporte = (Reporte) map.get("reporte");
         List<ProductoVendido> prod = reporte.getProductos();
         List<Orden> ordenes = reporte.getOrdenes();
-
         Map<Object, Double> totalProductos = prod.stream()
-        .collect(Collectors.groupingBy(p -> p.getNombre(), Collectors.summingDouble(p -> p.getCantidad())));
+        .collect(Collectors.groupingBy(ProductoVendido::getNombre, Collectors.summingDouble(p -> p.getCantidad())));
 
         NumberFormat nf = new DecimalFormat("##.###");
-        
+
         dcmnt.setPageSize(PageSize.A4);
         dcmnt.setMargins(-20, -20, 0, 0);
         dcmnt.open();
@@ -56,16 +62,16 @@ public class ImprimirReporte extends AbstractPdfView {
         //Tabla del titulo
         PdfPTable tablaTitulo = new PdfPTable(1);
         PdfPCell titulo = null;
-        
+
         Font fuenteTitulo = FontFactory.getFont("Helvetica", 16, Color.BLACK);
-        
+
         titulo = new PdfPCell(new Phrase("Control Productos", fuenteTitulo));
         titulo.setBorder(0);
         titulo.setBackgroundColor(Color.lightGray);
         titulo.setHorizontalAlignment(Element.ALIGN_CENTER);
         titulo.setVerticalAlignment(Element.ALIGN_CENTER);
         titulo.setPadding(30);
-        
+
         tablaTitulo.addCell(titulo);
         tablaTitulo.setSpacingAfter(30);
 
@@ -75,7 +81,7 @@ public class ImprimirReporte extends AbstractPdfView {
         tablaTituloCabecero.addCell("N° REPORTE: " + reporte.getIdReporte());
         tablaTituloCabecero.setSpacingAfter(20);
 
-        
+
         //Tabla de Titulos para tabla producto
         PdfPTable tablaTitulos = new PdfPTable(2);
         tablaTitulos.addCell("PRODUCTOS");
@@ -89,24 +95,25 @@ public class ImprimirReporte extends AbstractPdfView {
             tablaProductos.addCell(nf.format(entry.getValue()));
         }
 
+        //Hoja de Clientes
+
         PdfPTable tituloCliente = new PdfPTable(4);
+        tituloCliente.setSpacingAfter(10);
         tituloCliente.addCell("CLIENTE");
         tituloCliente.addCell("TOTAL");
         tituloCliente.addCell("PAGADO");
         tituloCliente.addCell("DEBE");
-        tablaTitulo.setSpacingAfter(10);
+        tituloCliente.setSpacingAfter(10);
 
         PdfPTable tablaClientes = new PdfPTable(4);
-       ordenes.forEach(orden -> {
-           orden.getClientes().forEach(clienteAgregado -> {
-               tablaClientes.addCell(clienteAgregado.getNombre() + " " + clienteAgregado.getApellido());
+           ordenes.forEach(order -> {
+               order.getClientes().forEach(cliente -> {
+                   tablaClientes.addCell(cliente.getNombre() + " " + cliente.getApellido());
+               });
+               tablaClientes.addCell(order.getTotal().toString());
+                tablaClientes.addCell(" ");
+                tablaClientes.addCell(" ");
            });
-           tablaClientes.addCell(orden.getTotal().toString());
-           tablaClientes.addCell(" ");
-           tablaClientes.addCell(" ");
-       });
-
-
 
         //Insercion al documento
         dcmnt.addTitle("Reporte");

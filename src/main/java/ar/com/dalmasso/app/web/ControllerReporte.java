@@ -112,14 +112,7 @@ public class ControllerReporte {
     @GetMapping(value = "/")
     public String interfazAgregar(Orden orden, BindingResult bindingResult, Cliente cliente, Model model, HttpServletRequest request) {
         List<Orden> ordenes = ordenService.listarOrdenes();
-        Collections.sort(ordenes, new Comparator<Orden>() {
-
-            @Override
-            public int compare(Orden o1, Orden o2) {
-                return o1.getIdOrden().compareTo(o2.getIdOrden());
-            }
-
-        }.reversed());
+        
         model.addAttribute("listarOrdenes", ordenes);
         var clientes = clienteService.listarClientes();
         model.addAttribute("clienteOrden", clientes);
@@ -138,23 +131,7 @@ public class ControllerReporte {
     private void guardarInforme(ArrayList<Orden> informe, HttpServletRequest request) {
         request.getSession().setAttribute("informe", informe);
     }
-
-    // @PostMapping(value = "/agregarOrden")
-    // public String agregarAlReporte(@ModelAttribute Orden orden, HttpServletRequest request, RedirectAttributes redirectAttrs) {
-    //     ArrayList<Orden> informe = this.obtenerOrdenes(request);
-    //     Orden ordenBuscadaPorId = ordenService.encontrarOrden(orden);
-    //     if (ordenBuscadaPorId == null) {
-    //         redirectAttrs
-    //                 .addFlashAttribute("mensaje", "Seleccione una orden de la lista.")
-    //                 .addFlashAttribute("clase", "warning");
-    //         return "redirect:/reporte/";
-    //     }
-    //     informe.add(ordenBuscadaPorId);
-    //     this.guardarInforme(informe, request);
-    //     return "redirect:/reporte/";
-    // }
-
-
+   
     @PostMapping("/agregarOrden")
     public String agregarAlReporte(@RequestParam(value = "listaOrden") List<Orden> orden,
      HttpServletRequest request, RedirectAttributes rd){

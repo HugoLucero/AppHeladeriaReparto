@@ -8,17 +8,16 @@ package ar.com.dalmasso.app.web;
 
 import ar.com.dalmasso.app.domain.ProductoVendido;
 import ar.com.dalmasso.app.domain.Reporte;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import ar.com.dalmasso.app.service.IReporteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import ar.com.dalmasso.app.service.IReporteService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -56,5 +55,5 @@ public class ControllerReport {
         
         return "visualizarReporte";
     }
-  
+
 }
