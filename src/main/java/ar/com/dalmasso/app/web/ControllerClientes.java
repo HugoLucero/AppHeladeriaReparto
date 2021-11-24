@@ -7,6 +7,7 @@
 package ar.com.dalmasso.app.web;
 
 import ar.com.dalmasso.app.domain.Cliente;
+import ar.com.dalmasso.app.service.IClienteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import ar.com.dalmasso.app.service.IClienteService;
 
 /**
  *
@@ -39,12 +37,7 @@ public class ControllerClientes {
 
         //Creamos una variable para manipular los clientes
         List<Cliente> clientes = clienteService.listarClientes();
-        Collections.sort(clientes, new Comparator<Cliente>(){
-            @Override
-            public int compare(Cliente c1, Cliente c2){
-                return c1.getNombreCliente().compareToIgnoreCase(c2.getNombreCliente());
-            }
-        });
+        Collections.sort(clientes, (c1, c2) -> c1.getNombreCliente().compareToIgnoreCase(c2.getNombreCliente()));
         log.info("Ejecutamos el controlador de Clientes");
         model.addAttribute("clientes", clientes);
         model.addAttribute("totalClientes", clientes.size());

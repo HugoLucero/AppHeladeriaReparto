@@ -8,8 +8,8 @@
     </head>
     <body>
         <section th:fragment="editarCliente">
-            <form th:action="@{/guardarCliente}" th:object="${cliente}" method="POST" class="was-validated">
-                <input type="hidden" name="idCliente" th:field="*{idCliente}"/>
+            <form class="was-validated" method="POST" th:action="@{/guardarCliente}" th:object="${cliente}">
+                <input name="idCliente" th:field="*{idCliente}" type="hidden"/>
                 <section th:replace="cliente/botonesEditarCliente :: botonesEditar"></section>
                 <div id="details">
                     <div class="container">
@@ -21,31 +21,27 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="nombre">[[#{ti.nombre}]]</label>
-                                            <input type="text" name="nombre" class="form-control" th:field="*{nombreCliente}"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="apellido">[[#{ti.apellido}]]</label>
-                                            <input type="text" name="apellido" class="form-control" th:field="*{apellidoCliente}"/>
+                                            <label for="nombre">[[#{ti.nombre}]] [[#{ti.apellido}]]</label>
+                                            <input class="form-control" name="nombre" th:field="*{nombreCliente}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="direccion">[[#{ti.direccion}]]</label>
-                                            <input type="text" name="direccion" class="form-control" th:field="*{direccionCliente}"/>
+                                            <input class="form-control" name="direccion" th:field="*{direccionCliente}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="telefono">[[#{ti.telefono}]]</label>
-                                            <input type="tel" name="telefono" class="form-control" th:field="*{telefonoCliente}"/>
+                                            <input class="form-control" name="telefono" th:field="*{telefonoCliente}" type="tel"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="zona">[[#{ti.zona}]]</label>
-                                            <input type="text" name="zona" class="form-control" th:field="*{zona}"/>
+                                            <input class="form-control" name="zona" th:field="*{zona}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="saldo">[[#{ti.saldo}]]</label>
-                                            <input type="number" name="saldo" class="form-control" th:field="*{saldoCliente}" step="any"/>
+                                            <input class="form-control" name="saldo" step="any" th:field="*{saldoCliente}" type="number"/>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="freezer" id="freezer" th:field="*{freezer}" >
+                                            <input class="form-check-input" id="freezer" th:field="*{freezer}" type="checkbox" value="freezer" >
                                                 <label class="form-check-label" for="freezer">
                                                     [[#{ti.freezer}]]
                                                 </label>

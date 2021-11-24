@@ -6,32 +6,25 @@
  */
 package ar.com.dalmasso.app.util;
 
-import java.awt.Color;
+import ar.com.dalmasso.app.domain.Orden;
+import ar.com.dalmasso.app.domain.ProductoVendido;
+import ar.com.dalmasso.app.domain.Reporte;
+import com.lowagie.text.Font;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.view.document.AbstractPdfView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.view.document.AbstractPdfView;
-
-import ar.com.dalmasso.app.domain.Orden;
-import ar.com.dalmasso.app.domain.ProductoVendido;
-import ar.com.dalmasso.app.domain.Reporte;
 
 /**
  *
@@ -97,23 +90,38 @@ public class ImprimirReporte extends AbstractPdfView {
 
         //Hoja de Clientes
 
-        PdfPTable tituloCliente = new PdfPTable(4);
+        PdfPTable tituloCliente = new PdfPTable(5);
         tituloCliente.setSpacingAfter(10);
+        tituloCliente.addCell("#");
         tituloCliente.addCell("CLIENTE");
         tituloCliente.addCell("TOTAL");
         tituloCliente.addCell("PAGADO");
         tituloCliente.addCell("DEBE");
         tituloCliente.setSpacingAfter(10);
 
-        PdfPTable tablaClientes = new PdfPTable(4);
-           ordenes.forEach(order -> {
+        PdfPTable tablaClientes = new PdfPTable(5);
+        ordenes.forEach(order -> {
                order.getClientes().forEach(cliente -> {
-                   tablaClientes.addCell(cliente.getNombre() + " " + cliente.getApellido());
+                   tablaClientes.addCell(cliente.getNombre());
                });
                tablaClientes.addCell(order.getTotal().toString());
                 tablaClientes.addCell(" ");
                 tablaClientes.addCell(" ");
            });
+
+           PdfPTable tablaTotal = new PdfPTable(1);
+           PdfPCell totales = null;
+
+           Font fuenteTotal = FontFactory.getFont("Arial", 16, Color.BLACK);
+
+           totales = new PdfPCell(new Phrase("TOTAL: $" + nf.format(reporte.getTotal()), fuenteTotal));
+           totales.setBorder(1);
+           totales.setHorizontalAlignment(Element.ALIGN_RIGHT);
+           totales.setVerticalAlignment(Element.ALIGN_RIGHT);
+           totales.setPadding(5);
+
+           tablaTotal.addCell(totales);
+           tablaTotal.setSpacingBefore(20);
 
         //Insercion al documento
         dcmnt.addTitle("Reporte");
@@ -125,6 +133,7 @@ public class ImprimirReporte extends AbstractPdfView {
         dcmnt.newPage();
         dcmnt.add(tituloCliente);
         dcmnt.add(tablaClientes);
+        dcmnt.add(tablaTotal);
 
     }
 

@@ -7,7 +7,6 @@
 package ar.com.dalmasso.app.web;
 
 import ar.com.dalmasso.app.dao.ClienteAgregadoDao;
-import ar.com.dalmasso.app.dao.ClienteDao;
 import ar.com.dalmasso.app.dao.ListasDePrecioDao;
 import ar.com.dalmasso.app.dao.ProductoVendidoDao;
 import ar.com.dalmasso.app.domain.*;
@@ -34,26 +33,21 @@ import java.util.List;
 @RequestMapping(path = "/vender")
 public class ControllerVenta {
 
-    private final IProductoService productoService;
-    private final IClienteService clienteService;
-    private final IOrdenService ordenService;
-    private final ProductoVendidoDao productoDao;
-    private final ClienteAgregadoDao clienteDao;
-    private final IListasService listasService;
-    private final ListasDePrecioDao listaDao;
     @Autowired
-    public ControllerVenta(IProductoService productoService, IClienteService clienteService,
-                           IOrdenService ordenService, ProductoVendidoDao productoDao,
-                           ClienteAgregadoDao clienteDao, IListasService listasService,
-                           ListasDePrecioDao listaDao) {
-        this.productoService = productoService;
-        this.clienteService = clienteService;
-        this.ordenService = ordenService;
-        this.productoDao = productoDao;
-        this.clienteDao = clienteDao;
-        this.listasService = listasService;
-        this.listaDao = listaDao;
-    }
+    private IProductoService productoService;
+    @Autowired
+    private IClienteService clienteService;
+    @Autowired
+    private IOrdenService ordenService;
+    @Autowired
+    private ProductoVendidoDao productoDao;
+    @Autowired
+    private ClienteAgregadoDao clienteDao;
+    @Autowired
+    private IListasService listasService;
+    @Autowired
+    private ListasDePrecioDao listaDao;
+
 
     @PostMapping(value = "/quitarCliente/{indice}")
     public String quitarCliente(@PathVariable int indice, HttpServletRequest request) {
@@ -166,7 +160,10 @@ public class ControllerVenta {
         for (ProductoParaVender p : carrito) {
             total += p.getTotal();
         }
+
         model.addAttribute("total", total);
+        model.addAttribute("totalProductos", carrito.size());
+
         return "vender/vender";
     }
 

@@ -8,8 +8,8 @@
     </head>
     <body>
         <section th:fragment="editarProducto">
-            <form th:action="@{/guardarProducto}" th:object="${producto}" method="POST" class="was-validated">
-                <input type="hidden" name="idProducto" th:field="*{idProducto}"/>
+            <form class="was-validated" method="POST" th:action="@{/guardarProducto}" th:object="${producto}">
+                <input name="idProducto" th:field="*{idProducto}" type="hidden"/>
                 <section th:replace="producto/botonesEditarProductos :: botonesEditar"></section>
                 <div id="details">
                     <div class="container">
@@ -22,26 +22,25 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="codigo">[[#{ti.codigo}]]</label>
-                                            <input type="text" name="codigo" class="form-control" th:field="*{codigo}"/>
+                                            <input class="form-control" name="codigo" th:field="*{codigo}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="nombre">[[#{ti.nombre}]]</label>
-                                            <input type="text" name="nombre" class="form-control" th:field="*{nombre}"/>
+                                            <input class="form-control" name="nombre" th:field="*{nombre}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="marca">[[#{ti.marca}]]</label>
-                                            <input type="text" name="marca" class="form-control" th:field="*{marca}"/>
+                                            <input class="form-control" name="marca" th:field="*{marca}" type="text"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="tipo">[[#{ti.tipo}]]</label>
-                                            <input type="text" name="tipo" class="form-control" th:field="*{tipo}"/>
+                                            <input class="form-control" name="tipo" th:field="*{tipo}" type="text"/>
                                         </div>
                                         <div class="form-group">
-                                            <label for="precio">[[#{ti.precio}]]</label>
-                                            <input type="hidden" name="precio" class="form-control" th:field="*{precio}" step="any"/>
+                                            <input class="form-control" name="precio" step="any" th:field="*{precio}" type="hidden"/>
                                         </div>
                                         <div class="form-group">
-                                            <input type="hidden" name="existencia" class="form-control" th:field="*{existencia}"/>
+                                            <input class="form-control" name="existencia" th:field="*{existencia}" type="hidden"/>
                                         </div>
                                     </div>
                                 </div>

@@ -7,8 +7,8 @@
         <meta charset="UTF-8"/>
     </head>
     <body>
-        <section th:fragment="listadoCliente" id="clientes">
-            <section id="main-header" class="py-2 bg-dark text-white">
+        <section id="clientes" th:fragment="listadoCliente">
+            <section class="py-2 bg-dark text-white" id="main-header">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
@@ -33,8 +33,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th th:text="#{ti.nombre}">Nombre</th>
-                                            <th th:text="#{ti.apellido}">Apellido</th>
+                                            <th>[[#{ti.nombre}]] y [[#{ti.apellido}]]</th>
                                             <th th:text="#{ti.direccion}">Direccion</th>
                                             <th th:text="#{ti.telefono}">Telefono</th>
                                             <th th:text="#{ti.zona}">Zona</th>
@@ -49,7 +48,6 @@
                                         <tr th:each="cliente, contador : ${clientes}">
                                             <td>[[${contador.count}]]</td>
                                             <td>[[${cliente.nombreCliente}]]</td>
-                                            <td>[[${cliente.apellidoCliente}]]</td>
                                             <td>[[${cliente.direccionCliente}]]</td>
                                             <td>[[${cliente.telefonoCliente}]]</td>
                                             <td>[[${cliente.zona}]]</td>
@@ -59,14 +57,14 @@
                                                 <span th:case="false" th:text="#{messages.false}"/>
                                             </td>
                                             <td>
-                                                <a th:href="@{/editarCliente/} + ${cliente.idCliente}"
-                                                   class="btn btn-secondary">
+                                                <a class="btn btn-secondary"
+                                                   th:href="@{/editarCliente/} + ${cliente.idCliente}">
                                                     <i class="fas fa-angle-double-right"></i> [[#{accion.editar}]]
                                                 </a>
                                             </td>
                                             <td>
-                                                <a th:href="@{/eliminarCliente(idCliente=${cliente.idCliente})}"
-                                                   class="btn btn-secondary">
+                                                <a class="btn btn-secondary"
+                                                   th:href="@{/eliminarCliente(idCliente=${cliente.idCliente})}">
                                                     <i class="fas fa-angle-double-right"></i> [[#{accion.eliminar}]]
                                                 </a>
                                             </td>

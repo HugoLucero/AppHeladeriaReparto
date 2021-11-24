@@ -76,7 +76,7 @@ public class ReporteVenta extends AbstractPdfView {
         PdfPTable tablaCabecero = new PdfPTable(3);
         tablaCabecero.addCell(orden.getFechaYHora());
         clientes.forEach(cliente -> {
-            tablaCabecero.addCell(cliente.getNombre() + " " + cliente.getApellido());
+            tablaCabecero.addCell(cliente.getNombre());
         });
         tablaCabecero.addCell(orden.getIdOrden().toString());
         tablaCabecero.setSpacingAfter(15);
@@ -105,7 +105,7 @@ public class ReporteVenta extends AbstractPdfView {
 
         Font fuenteTotal = FontFactory.getFont("Helvetica", 16, Color.BLACK);
 
-        total = new PdfPCell(new Phrase("Total: " + orden.getTotal(), fuenteTotal));
+        total = new PdfPCell(new Phrase("Total: $" + orden.getTotal(), fuenteTotal));
         total.setBorder(1);
         total.setHorizontalAlignment(Element.ALIGN_RIGHT);
         total.setVerticalAlignment(Element.ALIGN_RIGHT);
