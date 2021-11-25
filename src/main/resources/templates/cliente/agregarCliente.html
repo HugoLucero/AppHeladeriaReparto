@@ -8,48 +8,44 @@
     </head>
     <body>
         <section th:fragment="agregarCliente">
-            <div id="agregarCliente" class="modal fade" tabindex="-1">
+            <div class="modal fade" id="agregarCliente" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-info text-white">
                             <h5 class="modal-title" th:text="#{accion.agregar}">Agregar Cliente</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                         </div>
-                        <form th:action="@{/guardarCliente}" th:object="${cliente}" method="POST" class="was-validated">
+                        <form class="was-validated" method="POST" th:action="@{/guardarCliente}" th:object="${cliente}">
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="nombreCliente" th:text="#{ti.nombre}">Nombre</label>
-                                    <input type="text" name="nombreCliente" class="form-control" required="true"/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="apellidoCliente" th:text="#{ti.apellido}">Apellido</label>
-                                    <input type="text" name="apellidoCliente" class="form-control" required="true"/>
+                                    <label for="nombreCliente">[[#{ti.nombre}]] y [[#{ti.apellido}]]</label>
+                                    <input class="form-control" name="nombreCliente" required="true" type="text"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="direccionCliente" th:text="#{ti.direccion}">Apellido</label>
-                                    <input type="text" name="direccionCliente" class="form-control" required="true"/>
+                                    <input class="form-control" name="direccionCliente" required="true" type="text"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="telefonoCliente" th:text="#{ti.telefono}">Telefono</label>
-                                    <input type="tel" name="telefonoCliente" class="form-control"/>
+                                    <input class="form-control" name="telefonoCliente" type="tel"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="zona" th:text="#{ti.zona}">Zona</label>
-                                    <input type="text" name="zona" class="form-control" required="true"/>
+                                    <input class="form-control" name="zona" required="true" type="text"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="saldoCliente" th:text="#{ti.saldo}">Saldo</label>
-                                    <input type="number" name="saldoCliente" class="form-control" step="any"/>
+                                    <input class="form-control" name="saldoCliente" step="any" type="number"/>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="freezer" id="freezer" checked>
+                                    <input checked class="form-check-input" id="freezer" type="checkbox" value="freezer">
                                         <label class="form-check-label" for="freezer">
                                             [[#{ti.freezer}]]
                                         </label>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary" type="submit" th:text="#{accion.guardar}">Guardar</button>
+                                <button class="btn btn-primary" th:text="#{accion.guardar}" type="submit">Guardar</button>
                             </div>
                         </form>
                     </div>

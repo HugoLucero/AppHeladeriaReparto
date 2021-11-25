@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 /**
  * @author Hugo Lucero - Desarrollador Full - Stack
  */
@@ -99,16 +101,19 @@ public class ControllerListas {
 
     @PostMapping(value = "/agregarProducto")
     public String agregarProducto(@RequestParam(value = "listaEncontrar", defaultValue = "") Long listasDePrecio, RedirectAttributes rdr
-            , @RequestParam(value = "producto", defaultValue = "") String nombreProducto) {
+            , @RequestParam(value = "producto", defaultValue = "") List<String> nombreProducto) {
         var lista = listaDao.getById(listasDePrecio);
-        var producto = prodDao.findByNombre(nombreProducto);
-        var productosLista = lista.getProductos();
-        if (producto == null) {
-            rdr.addFlashAttribute("mensaje", "Seleccione un Producto de la lista.");
+        for (String productos : nombreProducto){
+            var producto = prodDao.findByNombre(productos);
+            var productosLista = lista.getProductos();
+            if (producto == null) {
+                rdr.addFlashAttribute("mensaje", "Seleccione un Producto de la lista.");
+            }
+            ProductosListas nuevoProducto = new ProductosListas(0f, producto, lista);
+            productosLista.add(nuevoProducto);
+            listasService.guardar(lista);
         }
-        ProductosListas nuevoProducto = new ProductosListas(0f, producto, lista);
-        productosLista.add(nuevoProducto);
-        listasService.guardar(lista);
+
         return "redirect:/verLista/" + listasDePrecio;
     }
 
@@ -118,10 +123,13 @@ public class ControllerListas {
     //cada uno de los productos.
     @PostMapping(value = "/editarProd")
     public String editarProducto(@RequestParam(value = "precio", defaultValue = "0") Float precio,
-                                 @RequestParam(value = "id", defaultValue = "") Long id, @RequestParam(value = "idLista", defaultValue = "") Long idLista) {
-        ProductosListas producto = pDao.getById(id);
-        producto.setPrecio(precio);
-        pDao.save(producto);
+                                 @RequestParam(value = "id", defaultValue = "") List<Long> id, @RequestParam(value = "idLista", defaultValue = "") Long idLista) {
+        for (Long productos : id){
+            ProductosListas producto = pDao.getById(productos);
+            producto.setPrecio(precio);
+            pDao.save(producto);
+        }
+
         return "redirect:/verLista/" + idLista;
     }
 }

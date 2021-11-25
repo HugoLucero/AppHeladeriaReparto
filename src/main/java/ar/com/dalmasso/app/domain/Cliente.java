@@ -28,7 +28,7 @@ public class Cliente implements Serializable {
     private Long idCliente;
     @NotEmpty
     private String nombreCliente;
-    @NotEmpty
+
     private String apellidoCliente;
     @NotEmpty
     private String direccionCliente;
