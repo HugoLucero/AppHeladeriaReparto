@@ -7,20 +7,20 @@
 </head>
 
 <body>
-    <section th:fragment="verReporte" id="reporte">
-        <section id="main-header" class="py-2 bg-dark text-white">
+    <section id="reporte" th:fragment="verReporte">
+        <section class="py-2 bg-dark text-white" id="main-header">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
                         <h1>
                             <i class="fas fa-cog"></i> [[#{ti.controlReportes}]]
                         </h1>
-                        <div th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}"
-                            th:text="${mensaje}" class="alert alert-secondary" role="alert">
+                        <div class="alert alert-secondary" role="alert"
+                            th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}" th:text="${mensaje}">
                         </div>
                     </div>
                     <div class="col-md-6 mx-auto py-2">
-                        <a class="btn btn-warning" th:href="@{?format=pdf}" role="button">
+                        <a class="btn btn-warning" role="button" th:href="@{?format=pdf}">
                             <i class="far fa-file-pdf"></i> Imprimir Productos
                         </a>
                     </div>
@@ -33,14 +33,15 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-secondary text-center text-white col-md-12">
-                            <div class="row">
-                                <div class="col align-self-start">
-                                    <a th:href="@{/reportesInicio}" class="btn btn-light">
+                                <div class="row justify-content-start">
+                                    <a class="btn btn-light col-md-1" th:href="@{/reportesInicio}">
                                         <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
                                     </a>
                                 </div>
+                            <h3>[[#{ti.reporte}]]</h3>
+                            <div >
+                                <h4 class="row justify-content-start">Total: $[[${reporte.getTotal}]]</h4>
                             </div>
-                            <h4>[[#{ti.reporte}]]</h4>
                         </div>
                         <div>
                             <table class="table table-dark table-striped">

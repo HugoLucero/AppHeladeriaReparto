@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
     <head th:fragment="head">
         <title>Plantilla</title>
         <meta charset="UTF-8"/>
@@ -18,13 +18,13 @@
                     <a class="navbar-brand" th:href="@{/}">
                         <i class="fas fa-light fa-ice-cream"></i> [[#{navbar.titulo}]]
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul sec:authorize="isAuthenticated()" class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0" sec:authorize="isAuthenticated()">
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/vender/}">Ventas</a>
+                                <a class="nav-link" th:href="@{/vender/}">Vender</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" th:href="@{/clientesInicio}">Clientes</a>
@@ -33,18 +33,18 @@
                                 <a class="nav-link" th:href="@{/productosInicio}">Productos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/ordenesInicio}">Ordenes</a>
+                                <a class="nav-link" th:href="@{/ordenesInicio}">Ventas Realizadas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" th:href="@{/cargasInicio}">Cargas</a>
                             </li>
                             <li class="nav-item">
-                                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/reportesInicio}">[[#{ti.reportes}]]</a>
+                                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/reportesInicio}">[[#{ti.reportes}]]</a>
                             </li>
                         </ul>
-                        <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
+                        <ul class="navbar-nav ml-auto" sec:authorize="isAuthenticated()">
                             <li class="nav-item mr-3">
-                                <a href="#" class="nav-link">
+                                <a class="nav-link" href="#">
                                     <i class="fas fa-user"></i>
                                     <span th:text="#{navbar.bienvenido}" >Bienvenido</span>
                                     <span sec:authentication="name">Usuario</span>
@@ -52,7 +52,7 @@
                             </li>
                             <li class="nav-item">
                                 <form method="POST" th:action="@{/logout}">
-                                    <a href="#" onclick="this.parentNode.submit();" class="nav-link">
+                                    <a class="nav-link" href="#" onclick="this.parentNode.submit();">
                                         <i class="fas fa-user-times"></i> [[#{navbar.salir}]]
                                     </a>
                                 </form>
@@ -62,7 +62,7 @@
                 </div>
             </nav>
         </header>
-        <footer th:fragment="footer" class="bg-dark text-white mt-1 p-1">
+        <footer class="bg-dark text-white mt-1 p-1" th:fragment="footer">
             <div class="container">
                 <div class="col">
                     <p class="lead text-center">

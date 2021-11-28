@@ -45,12 +45,15 @@ public class Reporte implements Serializable {
     }
 
     public List<Entry<String, Double>> getCa() {
-        var producto =  productos.stream()
-                .collect(Collectors.groupingBy(p -> p.getNombre(),
-                        Collectors.summingDouble(foo -> foo.getCantidad())))
+        return productos.stream()
+                .collect(Collectors.groupingBy(ProductoVendido::getNombre,
+                        Collectors.summingDouble(ProductoVendido::getCantidad)))
                  .entrySet().stream()
                  .collect(Collectors.toList());
-         return producto;
+    }
+
+    public Double getTotal(){
+        return ordenes.stream().mapToDouble(Orden::getTotal).sum();
     }
 
 }
