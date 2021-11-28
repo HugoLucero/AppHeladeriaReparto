@@ -85,7 +85,8 @@ public class ControllerVenta {
 
     @PostMapping(value = "/terminar")
     public String terminarVenta(Orden orden, Model model, @RequestParam(value = "pagado", defaultValue = "false") boolean pagado,
-                                @RequestParam(value = "modCant", defaultValue = "0") float modcant, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+                                @RequestParam(value = "modCant", defaultValue = "0") float modcant,
+                                @RequestParam(value = "obs", defaultValue = "") String obs, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         ArrayList<ClienteParaAgregar> clientes = this.obtenerCliente(request);
         // Si no hay carrito o está vací­o, regresamos inmediatamente
         if (clientes == null || clientes.size() <= 0) {
@@ -99,6 +100,7 @@ public class ControllerVenta {
         }
 
         ordenService.guardar(orden);
+        orden.setObservaciones(obs);
         // Recorrer los clientes
         for (ClienteParaAgregar clienteParaAgregar : clientes) {
             // Obtener el cliente fresco desde la base de datos
@@ -138,7 +140,7 @@ public class ControllerVenta {
     }
 
     @GetMapping(value = "/")
-    public String interfazVender(Producto producto, ProductoParaVender ppv, Cliente cliente, Model model, HttpServletRequest request) {
+    public String interfazVender(Producto producto, Orden orden, ProductoParaVender ppv, Cliente cliente, Model model, HttpServletRequest request) {
         //Creamos la variable que itera los clientes y la ordenamos 
         List<Cliente> clientes = clienteService.listarClientes();
         Collections.sort(clientes, new Comparator<Cliente>() {
@@ -150,6 +152,7 @@ public class ControllerVenta {
         model.addAttribute("listarClientes", clientes);
         model.addAttribute("producto", producto);
         model.addAttribute("cliente", cliente);
+        model.addAttribute("orden", orden);
         model.addAttribute("ppv", ppv);
 
         var listas = listasService.listas();

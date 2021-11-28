@@ -88,8 +88,13 @@
                                                             <td>[[${producto.total}]]</td>
                                                         </tr>
                                                     </tbody>
-                                                    <tfoot class="bg.dark"></tfoot>
+                                                    <tfoot class="bg.dark">
+                                                    </tfoot>
                                                 </table>
+                                            </div>
+                                            <div>
+                                                <label class="form-label" for="observaciones">Observaciones</label>
+                                                <textarea class="form-control bg-dark text-white" disabled id="observaciones" readonly rows="5" th:text="${orden.observaciones}"></textarea>
                                             </div>
                                         </td>
                                     </tbody>
