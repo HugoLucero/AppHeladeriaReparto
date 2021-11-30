@@ -99,6 +99,16 @@ public class ReporteVenta extends AbstractPdfView {
             tablaProductos.setSpacingAfter(10);
         });
 
+        // Tabla de observaciones
+        PdfPTable tablaObs = new PdfPTable(1);
+        PdfPCell obs = null;
+
+        obs = new PdfPCell(new Phrase("Observaciones: " + orden.getObservaciones()));
+        obs.setBorder(1);
+
+        tablaObs.addCell(obs);
+        tablaObs.setSpacingAfter(20);
+
         //Tabla del total
         PdfPTable tablaTotal = new PdfPTable(1);
         PdfPCell total = null;
@@ -122,6 +132,7 @@ public class ReporteVenta extends AbstractPdfView {
         dcmnt.add(tablaCabecero);
         dcmnt.add(tablaTitulos);
         dcmnt.add(tablaProductos);
+        dcmnt.add(tablaObs);
         dcmnt.add(tablaTotal);
 
         // Repetimos el reporte para obtener un duplicado dentro

@@ -56,7 +56,7 @@
                                                 <div class="list-group">
                                                     <a aria-current="false" class="list-group-item list-group-item-action active md-4"
                                                        th:each="cliente : ${orden.clientes}" th:href="@{/verOrden/} + ${orden.idOrden}">
-                                                        [[${orden.fechaYHora}]]   | |   [[${cliente.nombre}]] [[${cliente.apellido}]]
+                                                        [[${orden.fechaYHora}]]   | |   [[${cliente.nombre}]]
                                                     </a>
                                                 </div>
                                             </td>
@@ -80,16 +80,16 @@
                             <div class="card-footer bg-dark text-white">
                                 <ul class="nav nav-tabs" th:if="${totalPages > 1}">
                                     <li class="nav-item" th:each="i : ${#numbers.sequence(1, totalPages)}">
-                                        <a class="nav-link" th:if="${currentPage != i}" 
-                                        th:href="@{'/page/' + ${i} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                                        <a class="nav-link" th:href="@{'/page/' + ${i} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}"
+                                        th:if="${currentPage != i}">[[${i}]]</a>
                                         <a class="nav-link active bg-secondary text-white" th:unless="${currentPage != i }">[[${i}]]</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" th:if="${currentPages < totalPages}" th:href="@{'/page/' + ${currentPage + 1} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Siguiente</a>
+                                        <a class="nav-link" th:href="@{'/page/' + ${currentPage + 1} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}" th:if="${currentPages < totalPages}">Siguiente</a>
                                             <a class="nav-link" th:unless="${currentPage < totalPages}">Siguiente</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" th:if="${currentPages < totalPages}" th:href="@{'/page/' + ${totalPages} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Última</a>
+                                        <a class="nav-link" th:href="@{'/page/' + ${totalPages} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}" th:if="${currentPages < totalPages}">Última</a>
                                             <a class="nav-link" th:unless="${currentPage < totalPages}">Última</a>
                                     </li>
                                 </ul>

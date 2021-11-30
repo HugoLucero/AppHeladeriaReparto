@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -45,6 +46,7 @@ public class ImprimirReporte extends AbstractPdfView {
         List<Orden> ordenes = reporte.getOrdenes();
         Map<Object, Double> totalProductos = prod.stream()
         .collect(Collectors.groupingBy(ProductoVendido::getNombre, Collectors.summingDouble(p -> p.getCantidad())));
+
 
         NumberFormat nf = new DecimalFormat("##.###");
 
@@ -90,18 +92,17 @@ public class ImprimirReporte extends AbstractPdfView {
 
         //Hoja de Clientes
 
-        PdfPTable tituloCliente = new PdfPTable(5);
+        PdfPTable tituloCliente = new PdfPTable(4);
         tituloCliente.setSpacingAfter(10);
-        tituloCliente.addCell("#");
         tituloCliente.addCell("CLIENTE");
         tituloCliente.addCell("TOTAL");
         tituloCliente.addCell("PAGADO");
         tituloCliente.addCell("DEBE");
         tituloCliente.setSpacingAfter(10);
 
-        PdfPTable tablaClientes = new PdfPTable(5);
+        PdfPTable tablaClientes = new PdfPTable(4);
         ordenes.forEach(order -> {
-               order.getClientes().forEach(cliente -> {
+            order.getClientes().forEach(cliente -> {
                    tablaClientes.addCell(cliente.getNombre());
                });
                tablaClientes.addCell(order.getTotal().toString());
