@@ -1,8 +1,8 @@
 /*
  * Software creado y diseñado por Hugo Lucero.
-* Derechos reservados para Hugo Lucero.
-* Para más información contactarse a:
-* hlucerodiaz@gmail.com
+ * Derechos reservados para Hugo Lucero.
+ * Para más información contactarse a:
+ * hlucerodiaz@gmail.com
  */
 package ar.com.dalmasso.app.util;
 
@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -34,9 +35,9 @@ import java.util.stream.Collectors;
 public class ImprimirReporte extends AbstractPdfView {
 
     /*
-    *Clase encargada de emplear la utilidad para exportar los "Reportes".
-    *Utilizando DynammicsReports, extraído de un repositorio en Git.
-    */
+     *Clase encargada de emplear la utilidad para exportar los "Reportes".
+     *Utilizando DynammicsReports, extraído de un repositorio en Git.
+     */
 
     @Override
     protected void buildPdfDocument(Map<String, Object> map, Document dcmnt, PdfWriter writer, HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
@@ -44,7 +45,8 @@ public class ImprimirReporte extends AbstractPdfView {
         List<ProductoVendido> prod = reporte.getProductos();
         List<Orden> ordenes = reporte.getOrdenes();
         Map<Object, Double> totalProductos = prod.stream()
-        .collect(Collectors.groupingBy(ProductoVendido::getNombre, Collectors.summingDouble(p -> p.getCantidad())));
+                .collect(Collectors.groupingBy(ProductoVendido::getNombre, Collectors.summingDouble(p -> p.getCantidad())));
+
 
         NumberFormat nf = new DecimalFormat("##.###");
 
@@ -90,38 +92,37 @@ public class ImprimirReporte extends AbstractPdfView {
 
         //Hoja de Clientes
 
-        PdfPTable tituloCliente = new PdfPTable(5);
+        PdfPTable tituloCliente = new PdfPTable(4);
         tituloCliente.setSpacingAfter(10);
-        tituloCliente.addCell("#");
         tituloCliente.addCell("CLIENTE");
         tituloCliente.addCell("TOTAL");
         tituloCliente.addCell("PAGADO");
         tituloCliente.addCell("DEBE");
         tituloCliente.setSpacingAfter(10);
 
-        PdfPTable tablaClientes = new PdfPTable(5);
+        PdfPTable tablaClientes = new PdfPTable(4);
         ordenes.forEach(order -> {
-               order.getClientes().forEach(cliente -> {
-                   tablaClientes.addCell(cliente.getNombre());
-               });
-               tablaClientes.addCell(order.getTotal().toString());
-                tablaClientes.addCell(" ");
-                tablaClientes.addCell(" ");
-           });
+            order.getClientes().forEach(cliente -> {
+                tablaClientes.addCell(cliente.getNombre());
+            });
+            tablaClientes.addCell(order.getTotal().toString());
+            tablaClientes.addCell(" ");
+            tablaClientes.addCell(" ");
+        });
 
-           PdfPTable tablaTotal = new PdfPTable(1);
-           PdfPCell totales = null;
+        PdfPTable tablaTotal = new PdfPTable(1);
+        PdfPCell totales = null;
 
-           Font fuenteTotal = FontFactory.getFont("Arial", 16, Color.BLACK);
+        Font fuenteTotal = FontFactory.getFont("Arial", 16, Color.BLACK);
 
-           totales = new PdfPCell(new Phrase("TOTAL: $" + nf.format(reporte.getTotal()), fuenteTotal));
-           totales.setBorder(1);
-           totales.setHorizontalAlignment(Element.ALIGN_RIGHT);
-           totales.setVerticalAlignment(Element.ALIGN_RIGHT);
-           totales.setPadding(5);
+        totales = new PdfPCell(new Phrase("TOTAL: $" + nf.format(reporte.getTotal()), fuenteTotal));
+        totales.setBorder(1);
+        totales.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        totales.setVerticalAlignment(Element.ALIGN_RIGHT);
+        totales.setPadding(5);
 
-           tablaTotal.addCell(totales);
-           tablaTotal.setSpacingBefore(20);
+        tablaTotal.addCell(totales);
+        tablaTotal.setSpacingBefore(20);
 
         //Insercion al documento
         dcmnt.addTitle("Reporte");
