@@ -20,6 +20,8 @@ IDE: NetBeans, VS Code.
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+**Esta aplicación se aceptó en un principio como un desafío en el cual quería ganar mi primera experiencia con un cliente real, donde las prácticas fueron acordes a la experiencia y conocimientos que había obtenido mientras cursaba.**
+
 Sistema de Ventas realizado para una distribuidora de helados con el fin de solucionar 
 los problemas presentados por el cliente. Este sistema cuenta con varias secciones como lo 
 es la sección de:
