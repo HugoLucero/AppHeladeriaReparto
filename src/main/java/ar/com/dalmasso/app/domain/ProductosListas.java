@@ -10,12 +10,17 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author Hugo Lucero - Desarrollador Full - Stack
  */
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "productos_listas")
 public class ProductosListas implements Serializable {
@@ -38,8 +43,6 @@ public class ProductosListas implements Serializable {
 
     public ProductosListas() {
     }
-    
-    
 
     public ProductosListas(Float precio, Producto producto, ListasDePrecio listasDePrecio) {
         this.precio = precio;

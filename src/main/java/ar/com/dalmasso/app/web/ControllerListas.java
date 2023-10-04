@@ -103,16 +103,24 @@ public class ControllerListas {
     public String agregarProducto(@RequestParam(value = "listaEncontrar", defaultValue = "") Long listasDePrecio, RedirectAttributes rdr
             , @RequestParam(value = "producto", defaultValue = "") List<String> nombreProducto) {
         var lista = listaDao.getById(listasDePrecio);
+        var productosLista = lista.getProductos();
         for (String productos : nombreProducto){
             var producto = prodDao.findByNombre(productos);
-            var productosLista = lista.getProductos();
+            var productoLista = pDao.findByListasDePrecio_IdAndProducto_IdProducto(lista.getId(), producto.getIdProducto());
             if (producto == null) {
-                rdr.addFlashAttribute("mensaje", "Seleccione un Producto de la lista.");
+                rdr
+                        .addFlashAttribute("mensaje", "Seleccione un Producto de la lista.")
+                        .addFlashAttribute("clase", "warning");
+                return "redirect:/verLista/" + listasDePrecio;
+            } else if (productoLista != null) {
+                rdr
+                        .addFlashAttribute("mensaje", "El producto: " + producto.getNombre() + " ya se encuentra agregado a la lista")
+                        .addFlashAttribute("clase", "warning");
+                return "redirect:/verLista/" + listasDePrecio;
             }
-            ProductosListas nuevoProducto = new ProductosListas(0f, producto, lista);
-            productosLista.add(nuevoProducto);
-            listasService.guardar(lista);
+            productosLista.add(new ProductosListas(0f, producto, lista));
         }
+            listasService.guardar(lista);
 
         return "redirect:/verLista/" + listasDePrecio;
     }
