@@ -46,13 +46,6 @@
                 >
                   <!--Js en donde obtenemos el id de la lista-->
 
-                  <script type="text/javascript">
-                    // funcion que se ejecuta cada vez que se selecciona una opción
-                    function cambioOpciones() {
-                      document.getElementById("idListas").value =
-                        document.getElementById("lista").value;
-                    }
-                  </script>
                   <div class="form-group">
                     <label for="lista">Lista de Precio: </label>
                     <select
@@ -65,10 +58,9 @@
                       <option
                         th:each="lista : ${listas}"
                         th:text="${lista.nombre}"
-                        th:value="${lista.id}"
-                        th:selected="${#lists.size(listas) == 1}"></option>
+                        th:value="${lista.id}"></option>
                     </select>
-                    <input id="idListas" th:name="idLista" type="hidden" />
+                    <input id="idLista" th:name="idLista" type="hidden" />
                   </div>
                   <div class="form-group">
                     <!--Js para el autocomplete de JQuery-->
@@ -358,5 +350,25 @@
     />
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+      // funcion que se ejecuta cada vez que se selecciona una opción
+      function cambioOpciones() {
+        let list = localStorage.getItem("listaCacheada");
+        if(list == null) {
+          localStorage.setItem("listaCacheada", document.getElementById("lista").value);
+        }
+        document.getElementById("idLista").value = list == null ? document.getElementById("lista").value : list;
+      }
+
+      function loadLista() {
+        let list = localStorage.getItem("listaCacheada");
+        if(list != null || list > 0) {
+          document.getElementById("lista").value = list;
+          document.getElementById("idLista").value = list;
+        }
+      }
+
+      loadLista();
+    </script>
   </body>
 </html>
