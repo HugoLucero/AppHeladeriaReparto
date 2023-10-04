@@ -65,7 +65,8 @@
                       <option
                         th:each="lista : ${listas}"
                         th:text="${lista.nombre}"
-                        th:value="${lista.id}"></option>
+                        th:value="${lista.id}"
+                        th:selected="${#lists.size(listas) == 1}"></option>
                     </select>
                     <input id="idListas" th:name="idLista" type="hidden" />
                   </div>
