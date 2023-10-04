@@ -9,6 +9,7 @@ package ar.com.dalmasso.app.web;
 import ar.com.dalmasso.app.dao.ClienteAgregadoDao;
 import ar.com.dalmasso.app.dao.ListasDePrecioDao;
 import ar.com.dalmasso.app.dao.ProductoVendidoDao;
+import ar.com.dalmasso.app.dao.ProductosListasDao;
 import ar.com.dalmasso.app.domain.*;
 import ar.com.dalmasso.app.service.IClienteService;
 import ar.com.dalmasso.app.service.IListasService;
@@ -47,6 +48,8 @@ public class ControllerVenta {
     private IListasService listasService;
     @Autowired
     private ListasDePrecioDao listaDao;
+    @Autowired
+    private ProductosListasDao productosListasDao;
 
 
     @PostMapping(value = "/quitarCliente/{indice}")
@@ -194,16 +197,16 @@ public class ControllerVenta {
                     .addFlashAttribute("clase", "warning");
             return "redirect:/vender/";
         }
-        //Buscamos la lista que recibe del select de la vista
-        ListasDePrecio listaSeleccionada = listaDao.getById(idLista);
-        //Obtenemos el precio del producto referenciado a la lista seleccionada
-        List<ProductosListas> productosListas = listaSeleccionada.getProductos();
         Float precios = null;
-        for (ProductosListas productosLista : productosListas) {
-            if (productosLista.getProducto().equals(productoBuscadoPorNombre)) {
-                precios = productosLista.getPrecio();
-            }
-        }//Validaciones correspondientes para el producto
+        ProductosListas productosListas = productosListasDao.findByListasDePrecio_IdAndProducto_IdProducto(idLista, productoBuscadoPorNombre.getIdProducto());
+        if (productosListas == null || productosListas.getPrecio() == null || productosListas.getPrecio() == 0) {
+            redirectAttrs
+                    .addFlashAttribute("mensaje", "El producto con el nombre " + producto.getNombre() + " no tiene un precio informado")
+                    .addFlashAttribute("clase", "warning");
+            return "redirect:/vender/";
+        }
+        precios = productosListas.getPrecio();
+        //Validaciones correspondientes para el producto
         if (productoBuscadoPorNombre == null) {
             redirectAttrs
                     .addFlashAttribute("mensaje", "El producto con el nombre " + producto.getNombre() + " no existe")
