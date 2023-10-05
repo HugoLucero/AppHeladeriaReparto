@@ -73,6 +73,13 @@ public class ReporteVenta extends AbstractPdfView {
         tablaTituloCabecero.addCell("N° VENTA");
         tablaTituloCabecero.setSpacingAfter(5);
 
+        PdfPTable observaciones = new PdfPTable(1);
+        observaciones.addCell("OBSERVACIONES ->");
+        observaciones.setSpacingAfter(5);
+        PdfPTable observacionesData = new PdfPTable(1);
+        observacionesData.addCell(orden.getObservaciones() == null || orden.getObservaciones().isBlank() ? "-" : orden.getObservaciones());
+        observacionesData.setSpacingAfter(15);
+
         PdfPTable tablaCabecero = new PdfPTable(3);
         tablaCabecero.addCell(orden.getFechaYHora());
         clientes.forEach(cliente -> {
@@ -120,6 +127,8 @@ public class ReporteVenta extends AbstractPdfView {
         dcmnt.add(tablaTitulo);
         dcmnt.add(tablaTituloCabecero);
         dcmnt.add(tablaCabecero);
+        dcmnt.add(observaciones);
+        dcmnt.add(observacionesData);
         dcmnt.add(tablaTitulos);
         dcmnt.add(tablaProductos);
         dcmnt.add(tablaTotal);
@@ -129,6 +138,8 @@ public class ReporteVenta extends AbstractPdfView {
         dcmnt.add(tablaTitulo);
         dcmnt.add(tablaTituloCabecero);
         dcmnt.add(tablaCabecero);
+        dcmnt.add(observaciones);
+        dcmnt.add(observacionesData);
         dcmnt.add(tablaTitulos);
         dcmnt.add(tablaProductos);
         dcmnt.add(tablaTotal);

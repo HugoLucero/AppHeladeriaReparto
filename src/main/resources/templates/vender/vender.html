@@ -302,39 +302,45 @@
                   </div>
                 </div>
               </div>
-              <div class="row justify-content-end">
-                <div class="card-footer col-md-4">
-                  <form
-                    class="mb-2"
-                    method="post"
-                    th:action="@{/vender/terminar}"
-                  >
-                    <div class="row">
-                      <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          id="flexSwitchCheckDefault"
-                          th:name="pagado"
-                          type="checkbox"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckDefault"
-                          >Pagado</label
-                        >
-                      </div>
+              <form
+                class="mb-2"
+                method="post"
+                th:action="@{/vender/terminar}"
+              >
+                  <div class="form-floating mx-3">
+                    <textarea class="form-control bg-dark text-white" id="observaciones" rows="5"
+                              placeholder="Observaciones del pedido"
+                              th:name="observaciones" maxlength="200" ></textarea>
+                    <label for="observaciones">[[#{ti.observaciones}]]</label>
+                  </div>
+                  <div class="row justify-content-end">
+                    <div class="card-footer col-md-4">
+                        <div class="row">
+                          <div class="form-check form-switch">
+                            <input
+                              class="form-check-input"
+                              id="flexSwitchCheckDefault"
+                              th:name="pagado"
+                              type="checkbox"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="flexSwitchCheckDefault"
+                              >Pagado</label
+                            >
+                          </div>
+                        </div>
+                        <div class="row">
+                          <button class="btn btn-success" type="submit">
+                            Terminar&nbsp;<i class="fa fa-check"></i>
+                          </button>
+                          <a class="btn btn-danger" th:href="@{/vender/limpiar}"
+                            >Cancelar venta&nbsp;<i class="fa fa-trash"></i>
+                          </a>
+                        </div>
                     </div>
-                    <div class="row">
-                      <button class="btn btn-success" type="submit">
-                        Terminar&nbsp;<i class="fa fa-check"></i>
-                      </button>
-                      <a class="btn btn-danger" th:href="@{/vender/limpiar}"
-                        >Cancelar venta&nbsp;<i class="fa fa-trash"></i>
-                      </a>
-                    </div>
-                  </form>
-                </div>
-              </div>
+                  </div>
+              </form>
             </div>
           </div>
         </div>
@@ -364,10 +370,18 @@
         let list = localStorage.getItem("listaCacheada");
         if(list != null || list > 0) {
           document.getElementById("lista").value = list;
+          document.getElementById("nombre").focus();
           document.getElementById("idLista").value = list;
+        } else {
+          document.getElementById("lista").focus();
         }
       }
 
+      $("#nombre").keyup(function(event) {
+        if (event.keyCode === 13) {
+            $("#cantidad").focus();
+        }
+      });
       loadLista();
     </script>
   </body>
