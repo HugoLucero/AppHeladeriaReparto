@@ -87,8 +87,12 @@ public class ControllerVenta {
     }
 
     @PostMapping(value = "/terminar")
-    public String terminarVenta(Orden orden, Model model, @RequestParam(value = "pagado", defaultValue = "false") boolean pagado,
-                                @RequestParam(value = "modCant", defaultValue = "0") float modcant, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    public String terminarVenta(Orden orden, Model model,
+                                @RequestParam(value = "pagado", defaultValue = "false") boolean pagado,
+                                @RequestParam(value = "modCant", defaultValue = "0") float modcant,
+                                @RequestParam(value = "observaciones", defaultValue = "") String observaciones,
+                                HttpServletRequest request,
+                                RedirectAttributes redirectAttrs) {
         ArrayList<ClienteParaAgregar> clientes = this.obtenerCliente(request);
         // Si no hay carrito o está vací­o, regresamos inmediatamente
         if (clientes == null || clientes.size() <= 0) {
@@ -100,7 +104,9 @@ public class ControllerVenta {
         if (carrito == null || carrito.size() <= 0) {
             return "redirect:/vender/";
         }
-
+        if (!observaciones.isBlank()){
+            orden.setObservaciones(observaciones.trim());
+        }
         ordenService.guardar(orden);
         // Recorrer los clientes
         for (ClienteParaAgregar clienteParaAgregar : clientes) {

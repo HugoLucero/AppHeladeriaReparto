@@ -74,6 +74,9 @@ public class ImprimirReporte extends AbstractPdfView {
         tablaTituloCabecero.addCell("N° REPORTE: " + reporte.getIdReporte());
         tablaTituloCabecero.setSpacingAfter(20);
 
+        PdfPTable totalesData = new PdfPTable(1);
+        totalesData.addCell("TOTAL CLIENTES: " + ordenes.stream().map(o -> o.getClientes().size()).count());
+        totalesData.setSpacingAfter(10);
 
         //Tabla de Titulos para tabla producto
         PdfPTable tablaTitulos = new PdfPTable(2);
@@ -91,7 +94,7 @@ public class ImprimirReporte extends AbstractPdfView {
         //Hoja de Clientes
 
         PdfPTable tituloCliente = new PdfPTable(5);
-        tituloCliente.setSpacingAfter(10);
+        tituloCliente.setSpacingBefore(10);
         tituloCliente.addCell("#");
         tituloCliente.addCell("CLIENTE");
         tituloCliente.addCell("TOTAL");
@@ -100,7 +103,8 @@ public class ImprimirReporte extends AbstractPdfView {
         tituloCliente.setSpacingAfter(10);
 
         PdfPTable tablaClientes = new PdfPTable(5);
-        ordenes.forEach(order -> {
+            ordenes.forEach(order -> {
+                tablaClientes.addCell(String.valueOf(ordenes.indexOf(order)+1));
                order.getClientes().forEach(cliente -> {
                    tablaClientes.addCell(cliente.getNombre());
                });
@@ -128,6 +132,7 @@ public class ImprimirReporte extends AbstractPdfView {
 
         dcmnt.add(tablaTitulo);
         dcmnt.add(tablaTituloCabecero);
+        dcmnt.add(totalesData);
         dcmnt.add(tablaTitulos);
         dcmnt.add(tablaProductos);
         dcmnt.newPage();

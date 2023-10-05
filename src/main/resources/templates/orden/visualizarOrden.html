@@ -91,6 +91,14 @@
                                                     <tfoot class="bg.dark"></tfoot>
                                                 </table>
                                             </div>
+                                            <div th:if="${orden.observaciones != null and orden.observaciones != ''}">
+                                                <div class="form-group">
+                                                    <label for="floatingTextarea">[[#{ti.observaciones}]]</label>
+                                                    <textarea class="form-control bg-dark text-white" placeholder="Sin observaciones" id="floatingTextarea" rows="3" readonly>
+                                                        [[${orden.observaciones}]]
+                                                    </textarea>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tbody>
                                 </table>
