@@ -64,7 +64,7 @@ public class ControllerOrden {
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable (value = "pageNo")int pageNo,
         @RequestParam("sortField") String sortField,
-        @RequestParam("sortDir") String sortDir,
+        @RequestParam(value = "sortDir", defaultValue = "desc") String sortDir,
         Model model){
         int pageSize = 20;
         Page<Orden> page = ordenService.findPaginated(pageNo, pageSize, sortField, sortDir); 
