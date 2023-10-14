@@ -16,6 +16,11 @@ import java.util.List;
 @Service
 public class IVentaServiceImpl implements IVentaService {
 
+    private static final String REDIRECT_VENDER = "redirect:/vender/";
+    private static final String MENSAJE = "mensaje";
+    private static final String WARNING = "warning";
+    private static final String CLASE = "clase";
+    
     private final IProductoService productoService;
     private final IClienteService clienteService;
     private final IOrdenService ordenService;
@@ -43,7 +48,7 @@ public class IVentaServiceImpl implements IVentaService {
             clientes.remove(indice);
             this.guardarCliente(clientes, request);
         }
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     @Override
@@ -53,16 +58,16 @@ public class IVentaServiceImpl implements IVentaService {
             carrito.remove(indice);
             this.guardarCarrito(carrito, request);
         }
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     @Override
     public String cancelarVenta(HttpServletRequest request, RedirectAttributes redirectAttrs) {
         this.limpiarCarrito(request);
         redirectAttrs
-                .addFlashAttribute("mensaje", "Venta cancelada")
-                .addFlashAttribute("clase", "info");
-        return "redirect:/vender/";
+                .addFlashAttribute(MENSAJE, "Venta cancelada")
+                .addFlashAttribute(CLASE, "info");
+        return REDIRECT_VENDER;
     }
 
     @Override
@@ -70,13 +75,13 @@ public class IVentaServiceImpl implements IVentaService {
         List<ClienteParaAgregar> clientes = this.obtenerCliente(request);
 // Si no hay carrito o está vacío, regresamos inmediatamente
         if (clientes.isEmpty()) {
-            return "redirect:/vender/";
+            return REDIRECT_VENDER;
         }
 
         List<ProductoParaVender> carrito = this.obtenerCarrito(request);
 // Si no hay carrito o está vacío, regresamos inmediatamente
         if (carrito.isEmpty()) {
-            return "redirect:/vender/";
+            return REDIRECT_VENDER;
         }
 
         if (!observaciones.isBlank()) {
@@ -119,10 +124,10 @@ public class IVentaServiceImpl implements IVentaService {
 
 // Indicamos una venta exitosa
         redirectAttrs
-                .addFlashAttribute("mensaje", "Venta realizada correctamente")
-                .addFlashAttribute("clase", "success");
+                .addFlashAttribute(MENSAJE, "Venta realizada correctamente")
+                .addFlashAttribute(CLASE, "success");
 
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
 
     }
 
@@ -160,30 +165,30 @@ public class IVentaServiceImpl implements IVentaService {
 
         if (idLista == null || idLista <= 0) {
             redirectAttrs
-                    .addFlashAttribute("mensaje", "Por favor seleccione una lista. ")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/vender/";
+                    .addFlashAttribute(MENSAJE, "Por favor seleccione una lista. ")
+                    .addFlashAttribute(CLASE, WARNING);
+            return REDIRECT_VENDER;
         }
         ProductosListas productosListas = productosListasDao.findByListasDePrecio_IdAndProducto_IdProducto(idLista, productoBuscadoPorNombre.getIdProducto());
         if (productosListas == null || productosListas.getPrecio() == null || productosListas.getPrecio() == 0) {
             redirectAttrs
-                    .addFlashAttribute("mensaje", "El producto con el nombre " + producto.getNombre() + " no tiene un precio informado")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/vender/";
+                    .addFlashAttribute(MENSAJE, "El producto con el nombre " + producto.getNombre() + " no tiene un precio informado")
+                    .addFlashAttribute(CLASE, WARNING);
+            return REDIRECT_VENDER;
         }
         Float precios = productosListas.getPrecio();
         //Validaciones correspondientes para el producto
         if (productoBuscadoPorNombre == null) {
             redirectAttrs
-                    .addFlashAttribute("mensaje", "El producto con el nombre " + producto.getNombre() + " no existe")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/vender/";
+                    .addFlashAttribute(MENSAJE, "El producto con el nombre " + producto.getNombre() + " no existe")
+                    .addFlashAttribute(CLASE, WARNING);
+            return REDIRECT_VENDER;
         }
         if (productoBuscadoPorNombre.sinExistencia()) {
             redirectAttrs
-                    .addFlashAttribute("mensaje", "El producto está agotado")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/vender/";
+                    .addFlashAttribute(MENSAJE, "El producto está agotado")
+                    .addFlashAttribute(CLASE, WARNING);
+            return REDIRECT_VENDER;
         }  //Aumentamos la cantidad si se encuentra el producto
 
         boolean encontrado = false;
@@ -202,7 +207,7 @@ public class IVentaServiceImpl implements IVentaService {
                     precios, productoBuscadoPorNombre.getExistencia(), cantidad));
         }
         this.guardarCarrito(carrito, request);
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     @Override
@@ -211,9 +216,9 @@ public class IVentaServiceImpl implements IVentaService {
         Cliente clienteBuscadoPorNombre = clienteService.encontrarClienteNombre(cliente);
         if (clienteBuscadoPorNombre == null) {
             redirectAttrs
-                    .addFlashAttribute("mensaje", "Seleccione un cliente de la Lista o no existe el cliente buscado")
-                    .addFlashAttribute("clase", "warning");
-            return "redirect:/vender/";
+                    .addFlashAttribute(MENSAJE, "Seleccione un cliente de la Lista o no existe el cliente buscado")
+                    .addFlashAttribute(CLASE, WARNING);
+            return REDIRECT_VENDER;
         }
         boolean encontrado = false;
         for (ClienteParaAgregar clienteParaAgregar : clientes) {
@@ -226,7 +231,7 @@ public class IVentaServiceImpl implements IVentaService {
             clientes.add(new ClienteParaAgregar(clienteBuscadoPorNombre.getIdCliente(), clienteBuscadoPorNombre.getNombreCliente(), clienteBuscadoPorNombre.getApellidoCliente(), clienteBuscadoPorNombre.getDireccionCliente(), clienteBuscadoPorNombre.getTelefonoCliente(), clienteBuscadoPorNombre.getZona()));
         }
         this.guardarCliente(clientes, request);
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     @Override
@@ -247,7 +252,7 @@ public class IVentaServiceImpl implements IVentaService {
                 productoParaVender.setPrecio(precio);
             }
         }
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     @Override
@@ -258,7 +263,7 @@ public class IVentaServiceImpl implements IVentaService {
                 productoParaVender.setCantidad(modcant);
             }
         }
-        return "redirect:/vender/";
+        return REDIRECT_VENDER;
     }
 
     private void limpiarCarrito(HttpServletRequest request) {
