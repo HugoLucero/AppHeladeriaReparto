@@ -340,12 +340,25 @@ DROP TABLE IF EXISTS `usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
-  `id_usuario` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(45) DEFAULT NULL,
-  `password` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id_usuario`)
+   `id_usuario `      BIGINT       NOT NULL,
+      `username`         VARCHAR(255) NULL,
+      `password`         VARCHAR(255) NULL,
+      `mail`             VARCHAR(100) NULL,
+      `fecha_nacimiento` date         NULL,
+      `token`            VARCHAR(500) NULL,
+      `control_carga`    BIGINT       NULL,
+      CONSTRAINT pk_usuario PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+ALTER TABLE usuario
+    ADD CONSTRAINT uc_usuario_mail UNIQUE (mail);
+
+ALTER TABLE usuario
+    ADD CONSTRAINT uc_usuario_token UNIQUE (token);
+
+ALTER TABLE usuario
+    ADD CONSTRAINT FK_USUARIO_ON_CONTROL_CARGA FOREIGN KEY (control_carga) REFERENCES carga (id_carga);
 
 --
 -- Dumping data for table `usuario`
@@ -367,3 +380,9 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-09-20 12:53:12
+
+-- EN CASO DE EXISTENCIA CORRER EL SIGUIENTE SCRIPT PARA ACTUALIZAR LA BD
+-- ALTER TABLE usuario
+-- ADD COLUMN mail VARCHAR(100) UNIQUE,
+-- ADD COLUMN fechaNacimiento DATE,
+-- ADD COLUMN token VARCHAR(255) UNIQUE;
