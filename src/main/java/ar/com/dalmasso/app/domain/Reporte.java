@@ -9,7 +9,7 @@ package ar.com.dalmasso.app.domain;
 import ar.com.dalmasso.app.util.Utiles;
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map.Entry;

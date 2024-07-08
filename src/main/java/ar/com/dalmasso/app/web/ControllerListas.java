@@ -102,7 +102,7 @@ public class ControllerListas {
     @PostMapping(value = "/agregarProducto")
     public String agregarProducto(@RequestParam(value = "listaEncontrar", defaultValue = "") Long listasDePrecio, RedirectAttributes rdr
             , @RequestParam(value = "producto", defaultValue = "") List<String> nombreProducto) {
-        var lista = listaDao.getById(listasDePrecio);
+        var lista = listaDao.getReferenceById(listasDePrecio);
         var productosLista = lista.getProductos();
         for (String productos : nombreProducto){
             var producto = prodDao.findByNombre(productos);
@@ -133,7 +133,7 @@ public class ControllerListas {
     public String editarProducto(@RequestParam(value = "precio", defaultValue = "0") Float precio,
                                  @RequestParam(value = "id", defaultValue = "") List<Long> id, @RequestParam(value = "idLista", defaultValue = "") Long idLista) {
         for (Long productos : id){
-            ProductosListas producto = pDao.getById(productos);
+            ProductosListas producto = pDao.getReferenceById(productos);
             producto.setPrecio(precio);
             pDao.save(producto);
         }

@@ -9,42 +9,48 @@ package ar.com.dalmasso.app.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
+
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationManagerBuilder auth;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-    
+    public SecurityConfig(UserDetailsService userDetailsService, AuthenticationManagerBuilder auth) throws Exception {
+        this.userDetailsService = userDetailsService;
+        this.auth = auth;
+
+        configurerGlobal();
+    }
+
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
-    @Autowired
-    public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception{
-        build.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+
+    public void configurerGlobal() throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Override
-    protected void configure(HttpSecurity link) throws Exception {
-        link.authorizeRequests()
-                .antMatchers("/editarProducto/**", "/agregarProducto/**", "/eliminarProducto", "/guardarCargaProducto/**", "/editarExistencia/**"
-                , "/eliminarOrden", "/reportesInicio/**", "/agregarOrden/**")
-                .hasRole("ADMIN")
-                .antMatchers("/")
-                .hasAnyRole("USER", "ADMIN")
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .and()
-                .exceptionHandling().accessDeniedPage("/errores/403");
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/editarProducto/**", "/agregarProducto/**", "/eliminarProducto", "/guardarCargaProducto/**", "/editarExistencia/**", "/eliminarOrden", "/reportesInicio/**", "/agregarOrden/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/")
+                        .hasAnyRole("ADMIN", "USER"))
+                .formLogin(login -> login
+                        .loginPage("/login").permitAll())
+                .exceptionHandling(handling -> handling.accessDeniedPage("/errores/403"));
+        return http.build();
     }
 }
