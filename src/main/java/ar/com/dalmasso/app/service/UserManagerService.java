@@ -2,6 +2,7 @@ package ar.com.dalmasso.app.service;
 
 import ar.com.dalmasso.app.domain.Usuario;
 import ar.com.dalmasso.app.domain.UsuarioDto;
+import ar.com.dalmasso.app.util.ErrorHandler;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface UserManagerService {
 
     void setToken2User(String username, String token);
 
-    UsuarioDto editRoles(String userName, String token, List<String> roles);
+    UsuarioDto editRoles(String userName, String token, List<String> roles) throws ErrorHandler;
 }

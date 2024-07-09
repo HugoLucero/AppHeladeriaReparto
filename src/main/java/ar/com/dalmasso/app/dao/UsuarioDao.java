@@ -18,4 +18,6 @@ import java.util.Optional;
 public interface UsuarioDao extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByUsername(String username);
+
+    Optional<Usuario> findByToken(String token);
 }

@@ -5,6 +5,8 @@ import ar.com.dalmasso.app.dao.UsuarioDao;
 import ar.com.dalmasso.app.domain.Rol;
 import ar.com.dalmasso.app.domain.Usuario;
 import ar.com.dalmasso.app.domain.UsuarioDto;
+import ar.com.dalmasso.app.util.CodeErrors;
+import ar.com.dalmasso.app.util.ErrorHandler;
 import ar.com.dalmasso.app.util.Utiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserManagerServiceImpl implements UserManagerService {
@@ -30,7 +33,7 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     @Override
     public Usuario getUserByUsername(String username) {
-        return usuarioDao.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not exist"));
+        return usuarioDao.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(CodeErrors.USER_NOT_FOUND.name()));
     }
 
     @Override
@@ -57,7 +60,18 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     @Override
     public UsuarioDto editUser(UsuarioDto usuarioDto) {
-        return null;
+        Usuario usuario = usuarioDao.findByToken(usuarioDto.getToken()).orElseThrow(() -> new UsernameNotFoundException(CodeErrors.TOKEN_INCORRECT.name()));
+
+        if(Objects.nonNull(usuarioDto.getUsername()) && !usuario.getUsername().equals(usuarioDto.getUsername()))
+            usuario.setUsername(usuarioDto.getUsername());
+        if(Objects.nonNull(usuarioDto.getMail()) && !usuario.getMail().equals(usuarioDto.getMail()))
+            usuario.setMail(usuarioDto.getMail());
+        if(Objects.nonNull(usuarioDto.getFechaNacimiento()) && !usuario.getFechaNacimiento().equals(usuarioDto.getFechaNacimiento()))
+            usuario.setFechaNacimiento(usuarioDto.getFechaNacimiento());
+
+        usuarioDao.saveAndFlush(usuario);
+
+        return entity2Dto(usuario);
     }
 
     @Override
@@ -67,8 +81,25 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     @Override
-    public UsuarioDto editRoles(String userName, String token, List<String> roles) {
-        return null;
+    public UsuarioDto editRoles(String userName, String token, List<String> roles) throws ErrorHandler {
+        if(Objects.isNull(roles) || roles.isEmpty())
+            throw new ErrorHandler(CodeErrors.ROLES_NULL_EMPTY.name());
+
+
+        Usuario usuario = getUserByUsername(userName);
+        String tokenDecoded = Utiles.decodeB64(usuario.getToken());
+        if (!tokenDecoded.equals(token))
+            throw new ErrorHandler(CodeErrors.TOKEN_NOT_EQUAL.name());
+
+
+        List<Rol> rolList = usuario.getRoles();
+        for (String rol : roles) {
+            Rol r = rolDao.findByNombreIgnoreCase(rol);
+            rolList.add(Objects.requireNonNull(r, CodeErrors.ROL_NOT_FOUND.name()));
+        }
+        usuarioDao.saveAndFlush(usuario);
+
+        return entity2Dto(usuario);
     }
 
     private Usuario dto2Entity(UsuarioDto dto) {
