@@ -4,7 +4,7 @@ import ar.com.dalmasso.app.dao.RolRepository;
 import ar.com.dalmasso.app.dao.UsuarioDao;
 import ar.com.dalmasso.app.domain.Rol;
 import ar.com.dalmasso.app.domain.Usuario;
-import ar.com.dalmasso.app.domain.UsuarioDto;
+import ar.com.dalmasso.app.dto.UsuarioDto;
 import ar.com.dalmasso.app.util.CodeErrors;
 import ar.com.dalmasso.app.util.ErrorHandler;
 import ar.com.dalmasso.app.util.Utiles;

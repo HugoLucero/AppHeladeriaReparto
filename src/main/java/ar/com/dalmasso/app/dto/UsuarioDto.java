@@ -1,5 +1,6 @@
-package ar.com.dalmasso.app.domain;
+package ar.com.dalmasso.app.dto;
 
+import ar.com.dalmasso.app.domain.Usuario;
 import lombok.Value;
 
 import javax.validation.constraints.Email;

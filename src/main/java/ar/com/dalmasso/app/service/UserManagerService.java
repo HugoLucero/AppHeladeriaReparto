@@ -1,7 +1,7 @@
 package ar.com.dalmasso.app.service;
 
 import ar.com.dalmasso.app.domain.Usuario;
-import ar.com.dalmasso.app.domain.UsuarioDto;
+import ar.com.dalmasso.app.dto.UsuarioDto;
 import ar.com.dalmasso.app.util.ErrorHandler;
 
 import java.util.List;
