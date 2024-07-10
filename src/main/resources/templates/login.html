@@ -19,10 +19,10 @@
         <section id="login" >
             <div class="container" >
                 <div class="row">
-                    <div class="col-md-6 mx-auto">
+                    <div class="col-md-9 mx-auto">
                         <div class="card">
                             <div class="card-header bg-primary text-center">
-                                <h4>Login</h4>
+                                <h4 class="text-white"><strong>Login</strong></h4>
                             </div>
                             <div class="card-body bg-dark text-white">
                                 <form method="POST" th:action="@{/login}">
@@ -40,10 +40,14 @@
                                     </div>
                                 </form>
                                 <br>
-                                <div>
-                                    <a th:href="@{/usuario/?username=&restablece=false}">Crear usuario</a>
+                                <div class="card-text text-end">
+                                    <a class="text-warning" th:href="@{/usuario/?username=&restablece=false}">
+                                        <span style="font-size: 18px" th:text="#{ti.usuario.crear}"></span>
+                                    </a>
                                     <div class="col-md-2"></div>
-                                    <a th:href="@{/usuario/?username=&restablece=true}">Restablecer contrase&nacute;a</a>
+                                    <a class="text-warning" th:href="@{/usuario/?username=&restablece=true}">
+                                        <span style="font-size: 18px" th:text="#{ti.usuario.restablecer}"></span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
