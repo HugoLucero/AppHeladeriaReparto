@@ -11,21 +11,23 @@
         <section id="login" >
             <div class="container" >
                 <div class="row">
-                    <div class="col-md-6 mx-auto">
+                    <div class="col-md-9 mx-auto">
                         <div class="card">
                             <div class="card-header bg-primary text-center">
                                 <h4>Login</h4>
                             </div>
                             <div class="card-body bg-dark text-white" >
-                                <h3>[[#{ti.usuario.mensajeToken}]]&nbsp;[[${dto.token}]]</h3>
+                                <h3>[[#{ti.usuario.mensajeToken}]]&nbsp;<strong>[[${dto.token}]]</strong></h3>
                             </div>
-                            <div class="alert alert-info" role="alert">
-                                <strong th:if="${!restablece}" th:text="#{ti.token.mensaje}"></strong>
-                                <div th:if="${restablece}">
-                                    <br>
-                                    <span th:text="#{ti.token.mensaje-dos}"></span>
+                            <div class="card-footer bg-dark">
+                                <div class="alert alert-info" role="alert">
+                                    <strong th:if="${!restablece}" th:text="#{ti.token.mensaje}"></strong>
+                                    <div th:if="${restablece}">
+                                        <br>
+                                        <span th:text="#{ti.token.mensaje-dos}"></span>
+                                    </div>
+                                    &nbsp;Haga click&nbsp;<a th:href="@{/login}" class="alert-link">aqu&iacute;</a> para continuar.
                                 </div>
-                                 &nbsp;Haga click<a th:href="@{/login}" class="alert-link">aqu&iacute;</a> para continuar.
                             </div>
                         </div>
                     </div>
