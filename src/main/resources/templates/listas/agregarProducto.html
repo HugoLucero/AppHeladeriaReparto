@@ -20,7 +20,7 @@
                     </div>
                     <form class="was-validated" method="POST" th:action="@{/agregarProducto}">
                         <input th:name="listaEncontrar" th:value="${lista.id}" type="hidden"/>
-                        <div class="modal-body bg-dark">
+                        <div class="modal-body">
                             <div class="form-check" th:each="producto : ${product}">
                               <label class="form-check-label text-white" for="idProducto">
                                 <input class="form-check-input" id="idProducto" th:name="producto" th:value="${producto.nombre}" type="checkbox" >
@@ -28,7 +28,7 @@
                               </label>
                             </div>
                         </div>
-                        <div class="modal-footer bg-dark">
+                        <div class="modal-footer">
                             <button class="btn btn-warning" th:text="#{accion.guardar}" type="submit">Guardar</button>
                         </div>
                     </form>

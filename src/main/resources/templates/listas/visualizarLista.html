@@ -9,10 +9,10 @@
         <title>Listado Productos</title>
         <meta charset="UTF-8"/>
     </head>
-    <body class="bg-dark">
+    <body>
     <section th:replace="layout/plantilla :: header"></section>
         <section th:fragment="productos">
-            <section class="py-2 bg-dark text-white" id="main-header">
+            <section class="py-2" id="main-header">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
@@ -63,7 +63,7 @@
                                                 <input th:name="idLista" th:value="${lista.id}" type="hidden">
                                                 <td>
                                                     <input th:name="id" th:value="${productoss.productoId}" type="hidden">
-                                                        <input class="form-control bg-dark text-white" th:name="precio" th:value="${productoss.precio}" type="number"/>
+                                                        <input class="form-control" th:name="precio" th:value="${productoss.precio}" type="number"/>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-warning" name="editar" type="submit" value="editar">
@@ -74,7 +74,7 @@
                                         </tr>
                                     </div>
                                 </tbody>
-                                <tfoot class="bg-dark"></tfoot>
+                                <tfoot></tfoot>
                             </table>
                         </div>
                     </div>
