@@ -1,24 +1,37 @@
 package ar.com.dalmasso.app.dto;
 
 import ar.com.dalmasso.app.domain.Usuario;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DTO for {@link Usuario}
  */
-@Value
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioDto implements Serializable {
+
+    private static final long serialVersionUID = 2405172041950251807L;
+
+
     @NotEmpty
-    String username;
+    private String username;
     @NotEmpty
-    String password;
+    private String password;
     @Email(message = "El mail ingresado es incorrecto")
-    String mail;
-    Date fechaNacimiento;
-    String token;
+    private String mail;
+    String fechaNacimiento;
+    private String token;
+
+    private List<String> roles = new ArrayList<>();
 }

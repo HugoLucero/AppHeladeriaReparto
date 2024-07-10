@@ -6,7 +6,10 @@
  */
 package ar.com.dalmasso.app.domain;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -17,7 +20,10 @@ import java.io.Serializable;
  * @author hugoa
  */
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="rol")
 public class Rol implements Serializable {
 

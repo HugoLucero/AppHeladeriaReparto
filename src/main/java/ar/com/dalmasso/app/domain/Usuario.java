@@ -40,7 +40,7 @@ public class Usuario implements Serializable {
     private String username;
     @NotEmpty
     private String password;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="id_usuario")
     private List<Rol> roles;
 
@@ -49,6 +49,7 @@ public class Usuario implements Serializable {
     private String mail;
 
     @Temporal(TemporalType.DATE)
+    @Column(name = "fechaNacimiento")
     private Date fechaNacimiento;
 
     @Column(length = 500, unique = true)

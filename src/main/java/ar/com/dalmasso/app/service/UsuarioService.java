@@ -9,6 +9,8 @@ package ar.com.dalmasso.app.service;
 import ar.com.dalmasso.app.dao.UsuarioDao;
 import ar.com.dalmasso.app.domain.Rol;
 import ar.com.dalmasso.app.domain.Usuario;
+import ar.com.dalmasso.app.util.CodeErrors;
+import ar.com.dalmasso.app.util.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,19 +30,28 @@ import java.util.ArrayList;
 @Service("userDetailsService")
 public class UsuarioService implements UserDetailsService {
     
+    private final UsuarioDao usuarioDao;
+
     @Autowired
-    private UsuarioDao usuarioDao;
+    public UsuarioService(UsuarioDao usuarioDao) {
+        this.usuarioDao = usuarioDao;
+    }
 
     @Override
     @Transactional(readOnly=true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioDao.findByUsername(username);
-        
+        Usuario usuario = null;
+        try {
+            usuario = usuarioDao.findByUsername(username).orElseThrow(() -> new ErrorHandler(CodeErrors.USER_NOT_FOUND.name()));
+        } catch (ErrorHandler e) {
+            throw new UsernameNotFoundException(e.getMessage());
+        }
+
         if(usuario == null){
             throw new UsernameNotFoundException(username);
         }
         
-        ArrayList<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+        ArrayList<GrantedAuthority> roles = new ArrayList<>();
         
         for(Rol rol : usuario.getRoles()){
             roles.add(new SimpleGrantedAuthority(rol.getNombre()));

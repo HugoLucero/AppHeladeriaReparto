@@ -34,10 +34,15 @@
                                         <label for="password">[[#{form.password}]]:</label>
                                         <input type="password" name="password" id="password" class="form-control bg-dark text-white"/>
                                     </div>
+                                    <br>
                                     <div class="d-grid gap-2">
                                         <button type="submit" value="Login" class="btn btn-info">[[#{form.submit}]]</button>
                                     </div>
                                 </form>
+                                <br>
+                                <div>
+                                    <a th:href="@{/usuario/?username}">Crear usuario</a>
+                                </div>
                             </div>
                         </div>
                     </div>
