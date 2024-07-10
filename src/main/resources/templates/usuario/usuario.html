@@ -43,7 +43,7 @@
                                 </form>
                             </div>
                             <div th:if="${restablece}" class="card-body bg-dark text-white">
-                                <form method="POST" th:action="@{/usuario/reset}" th:object="${dto}" class="was-validated">
+                                <form method="POST" th:action="@{/password/reset}" th:object="${dto}" class="was-validated">
                                     <input type="hidden" name="password" value="-"/>
                                     <div class="form-group">
                                         <label for="username2" th:text="#{ti.usuario.username}">username</label>

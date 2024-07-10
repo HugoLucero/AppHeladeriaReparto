@@ -87,6 +87,7 @@ public class UserManagerServiceImpl implements UserManagerService {
     public void setToken2User(String username, String token) {
         Usuario usuario = getUserByUsername(username);
         usuario.setToken(Utiles.encodeB64(token));
+        usuarioDao.save(usuario);
     }
 
     @Override

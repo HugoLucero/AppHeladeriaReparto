@@ -69,29 +69,6 @@ public class ControllerUser {
        }
     }
 
-    @PostMapping(value = "/reset")
-    public String restablece(Model model, @ModelAttribute @Valid UsuarioDto dto) {
-
-        try {
-            UsuarioDto usuarioDto = new UsuarioDto();
-            if(Objects.nonNull(dto))
-                userManagerService.setToken2User(dto.getUsername(), dto.getToken());
-
-            model.addAttribute("dto", usuarioDto);
-            model.addAttribute(RESTABLECE, true);
-            model.addAttribute(MENSAJE_ALERTA, "Su contraseña se ha restablecido");
-            model.addAttribute(TIPO_ALERTA, "success");
-            return "usuario/token";
-        } catch (Exception e) {
-            UsuarioDto usuarioDto = new UsuarioDto();
-            usuarioDto.setToken("Error de token");
-            model.addAttribute("dto", usuarioDto);
-            model.addAttribute(RESTABLECE, true);
-            model.addAttribute(MENSAJE_ALERTA, e.getMessage());
-            model.addAttribute(TIPO_ALERTA, "error");
-            return RETURN_USUARIO;
-        }
-    }
     // REST
 
     @PostMapping(value = "/rest/createUser")

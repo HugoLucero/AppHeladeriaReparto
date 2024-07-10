@@ -1,6 +1,7 @@
 package ar.com.dalmasso.app.service;
 
 import ar.com.dalmasso.app.domain.Usuario;
+import ar.com.dalmasso.app.util.CodeErrors;
 import ar.com.dalmasso.app.util.EncriptPass;
 import ar.com.dalmasso.app.util.ResponseUtil;
 import ar.com.dalmasso.app.util.Utiles;
@@ -34,10 +35,10 @@ public class PasswordManagerServiceImpl implements PasswordManagerService {
     @Override
     public void resetPassword(String username, String token) {
         Usuario usuario = userManagerService.getUserByUsername(username);
-        if(!usuario.getToken().equals(Utiles.decodeB64(token))) {
-            throw new UsernameNotFoundException("Token is incorrect");
+        if(!usuario.getToken().equals(Utiles.encodeB64(token))) {
+            throw new UsernameNotFoundException(CodeErrors.TOKEN_NOT_EQUAL.name());
         } else {
-            userManagerService.setPassword(usuario.getUsername(), token);
+            userManagerService.setPassword(usuario.getUsername(), EncriptPass.encriptarPassword(token.trim()));
         }
     }
 }

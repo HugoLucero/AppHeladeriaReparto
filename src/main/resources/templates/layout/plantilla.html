@@ -102,6 +102,7 @@
                     let errorList = {
                         'usuario.mail': 'El mail ingresado ya existe',
                         'usuario.token': 'El token creado existe para otro usuario',
+                        'TOKEN_NOT_EQUAL': 'El token ingresado no es correcto. Intente nuevamente.',
                     }
                     for (let errorListKey in errorList) {
                         if(message.includes(errorListKey)){
