@@ -11,7 +11,7 @@
         <div class="modal fade" id="productoLista" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-warning text-dark">
+                    <div class="modal-header bg-warning">
                         <h5 class="modal-title" th:text="#{accion.agregar}">Agregar Lista</h5>
                         <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                     </div>
@@ -22,7 +22,7 @@
                         <input th:name="listaEncontrar" th:value="${lista.id}" type="hidden"/>
                         <div class="modal-body">
                             <div class="form-check" th:each="producto : ${product}">
-                              <label class="form-check-label text-white" for="idProducto">
+                              <label class="form-check-label" for="idProducto">
                                 <input class="form-check-input" id="idProducto" th:name="producto" th:value="${producto.nombre}" type="checkbox" >
                                 [[${producto.nombre}]]
                               </label>
