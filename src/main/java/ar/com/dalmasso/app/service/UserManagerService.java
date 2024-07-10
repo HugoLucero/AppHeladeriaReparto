@@ -15,7 +15,7 @@ public interface UserManagerService {
 
     void setPassword(String username, String password);
 
-    UsuarioDto createUser(UsuarioDto usuarioDto) throws ParseException;
+    UsuarioDto createUser(UsuarioDto usuarioDto) throws ParseException, ErrorHandler;
 
     UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException;
 

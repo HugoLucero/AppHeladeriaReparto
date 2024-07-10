@@ -51,18 +51,33 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     @Override
-    public UsuarioDto createUser(UsuarioDto dto) throws ParseException {
-        List<Rol> roles = new ArrayList<>();
-        roles.add(new Rol(null, "ROLE_USER"));
-        int token = Utiles.getFiveDigitsNumber();
-        Usuario user = dto2Entity(dto);
-        user.setPassword(EncriptPass.encriptarPassword(dto.getPassword()));
-        user.setToken(Utiles.encodeB64(Integer.toString(token)));
-        user.setRoles(roles);
+    public UsuarioDto createUser(UsuarioDto dto) throws ErrorHandler {
+        try {
+            List<Rol> roles = new ArrayList<>();
+            if (usuarioDao.count() > 0)
+                roles.add(new Rol(null, "ROLE_USER"));
+            else {
+                roles.add(new Rol(null, "ROLE_USER"));
+                roles.add(new Rol(null, "ROLE_ADMIN"));
+            }
 
-        usuarioDao.saveAndFlush(user);
+            if (usuarioDao.existsByUsernameIgnoreCase(dto.getUsername()))
+                throw new ErrorHandler(CodeErrors.USER_REPEATED.name());
 
-        return entity2Dto(user);
+            validatePassword(dto.getPassword().trim());
+
+            int token = Utiles.getFiveDigitsNumber();
+            Usuario user = dto2Entity(dto);
+            user.setPassword(EncriptPass.encriptarPassword(dto.getPassword()));
+            user.setToken(Utiles.encodeB64(Integer.toString(token)));
+            user.setRoles(roles);
+
+            usuarioDao.saveAndFlush(user);
+
+            return entity2Dto(user);
+        } catch (Exception e) {
+            throw new ErrorHandler(e.getMessage());
+        }
     }
 
     @Override
@@ -124,5 +139,22 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     private UsuarioDto entity2Dto(Usuario user){
         return new UsuarioDto(user.getUsername(), null, user.getMail(), user.getFechaNacimiento().toString(), Utiles.decodeB64(user.getToken()), null);
+    }
+
+    private void validatePassword(String password) throws ErrorHandler {
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        List<String> list = new ArrayList<>();
+        list.add("1234");
+        list.add("1111");
+        list.add("0000");
+        list.add("1234567890");
+
+        if (list.contains(password)) {
+            throw new ErrorHandler(CodeErrors.PASSWORD_NOT_1234.name());
+        } else if (password.length() < 8) {
+            throw new ErrorHandler(CodeErrors.PASSWORD_NOT_LENGTH.name());
+        }else if (!password.matches(regex)) {
+            throw new ErrorHandler(CodeErrors.PASSWORD_NOT_REGEX.name());
+        }
     }
 }

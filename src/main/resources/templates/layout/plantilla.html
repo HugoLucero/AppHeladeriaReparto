@@ -103,6 +103,10 @@
                         'usuario.mail': 'El mail ingresado ya existe',
                         'usuario.token': 'El token creado existe para otro usuario',
                         'TOKEN_NOT_EQUAL': 'El token ingresado no es correcto. Intente nuevamente.',
+                        'USER_REPEATED': 'El nombre de usuario ingresado ya existe.',
+                        'PASSWORD_NOT_1234': 'La contraseña no puede ser 1234, 1111, 1234567890, 0000',
+                        'PASSWORD_NOT_REGEX': 'La contraseña debe tener al menos 8 caracteres, al menos una letra y un número',
+                        'PASSWORD_NOT_LENGTH': 'La contraseña no puede ser menor a 8 caracteres',
                     }
                     for (let errorListKey in errorList) {
                         if(message.includes(errorListKey)){
