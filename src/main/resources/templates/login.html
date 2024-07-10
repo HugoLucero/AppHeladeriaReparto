@@ -41,7 +41,9 @@
                                 </form>
                                 <br>
                                 <div>
-                                    <a th:href="@{/usuario/?username}">Crear usuario</a>
+                                    <a th:href="@{/usuario/?username=&restablece=false}">Crear usuario</a>
+                                    <div class="col-md-2"></div>
+                                    <a th:href="@{/usuario/?username=&restablece=true}">Restablecer contrase&nacute;a</a>
                                 </div>
                             </div>
                         </div>

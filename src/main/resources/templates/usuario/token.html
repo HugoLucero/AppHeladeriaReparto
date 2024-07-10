@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
     <head th:replace="layout/plantilla :: head">
-        <title>Login</title>
+        <title>[[#{ti.token}]]</title>
         <meta charset="UTF-8"/>
     </head>
     <body class="bg-dark">
@@ -14,7 +14,7 @@
                     <div class="col-md-9 mx-auto">
                         <div class="card">
                             <div class="card-header bg-primary text-center">
-                                <h4>Login</h4>
+                                <h4>[[#{ti.token}]]</h4>
                             </div>
                             <div class="card-body bg-dark text-white" >
                                 <h3>[[#{ti.usuario.mensajeToken}]]&nbsp;<strong>[[${dto.token}]]</strong></h3>

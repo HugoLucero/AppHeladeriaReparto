@@ -10,12 +10,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "/usuario")
 public class ControllerUser {
+
+    private static final String RESTABLECE = "restablece";
+    private static final String MENSAJE_ALERTA = "mensajeAlerta";
+    private static final String TIPO_ALERTA = "tipoAlerta";
+    private static final String RETURN_USUARIO = "usuario/usuario";
 
     private final UserManagerService userManagerService;
 
@@ -27,7 +31,7 @@ public class ControllerUser {
     // MVC
 
     @GetMapping(value = "/")
-    public String createOrEditUser(Model model, @RequestParam String username) {
+    public String createOrEditUser(Model model, @RequestParam String username, @RequestParam boolean restablece) {
         UsuarioDto usuarioDto;
         if(Objects.nonNull(username) && !username.isEmpty())
             usuarioDto = userManagerService.getUserDtoByUsername(username);
@@ -35,20 +39,58 @@ public class ControllerUser {
             usuarioDto = new UsuarioDto();
 
         model.addAttribute("dto", usuarioDto);
-        return "usuario/usuario";
+        model.addAttribute(RESTABLECE, restablece);
+        return RETURN_USUARIO;
     }
 
 
 
     @PostMapping(value = "/create")
-    public String createOrEditUser(Model model, @ModelAttribute @Valid UsuarioDto dto) throws ParseException {
-        UsuarioDto usuarioDto = new UsuarioDto();
-        if(Objects.nonNull(dto))
-            usuarioDto = userManagerService.createUser(dto);
+    public String createOrEditUser(Model model, @ModelAttribute @Valid UsuarioDto dto) {
 
-        model.addAttribute("dto", usuarioDto);
-        model.addAttribute("restablece", false);
-        return "usuario/token";
+       try {
+           UsuarioDto usuarioDto = new UsuarioDto();
+           if(Objects.nonNull(dto))
+               usuarioDto = userManagerService.createUser(dto);
+
+           model.addAttribute("dto", usuarioDto);
+           model.addAttribute(RESTABLECE, false);
+           model.addAttribute(MENSAJE_ALERTA, "Usuario creado correctamente");
+           model.addAttribute(TIPO_ALERTA, "success");
+           return "usuario/token";
+       } catch (Exception e) {
+           UsuarioDto usuarioDto = new UsuarioDto();
+            usuarioDto.setToken("Error de token");
+           model.addAttribute("dto", usuarioDto);
+           model.addAttribute(RESTABLECE, false);
+           model.addAttribute(MENSAJE_ALERTA, e.getMessage());
+           model.addAttribute(TIPO_ALERTA, "error");
+           return RETURN_USUARIO;
+       }
+    }
+
+    @PostMapping(value = "/reset")
+    public String restablece(Model model, @ModelAttribute @Valid UsuarioDto dto) {
+
+        try {
+            UsuarioDto usuarioDto = new UsuarioDto();
+            if(Objects.nonNull(dto))
+                userManagerService.setToken2User(dto.getUsername(), dto.getToken());
+
+            model.addAttribute("dto", usuarioDto);
+            model.addAttribute(RESTABLECE, true);
+            model.addAttribute(MENSAJE_ALERTA, "Su contraseña se ha restablecido");
+            model.addAttribute(TIPO_ALERTA, "success");
+            return "usuario/token";
+        } catch (Exception e) {
+            UsuarioDto usuarioDto = new UsuarioDto();
+            usuarioDto.setToken("Error de token");
+            model.addAttribute("dto", usuarioDto);
+            model.addAttribute(RESTABLECE, true);
+            model.addAttribute(MENSAJE_ALERTA, e.getMessage());
+            model.addAttribute(TIPO_ALERTA, "error");
+            return RETURN_USUARIO;
+        }
     }
     // REST
 
