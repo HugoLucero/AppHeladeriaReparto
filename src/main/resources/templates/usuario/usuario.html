@@ -5,7 +5,7 @@
         <title>Login</title>
         <meta charset="UTF-8"/>
     </head>
-    <body class="bg-dark">
+    <body>
         <header th:replace="layout/plantilla :: header"></header>
 
         <section id="login" >
@@ -17,7 +17,7 @@
                                 <h4 class="text-white" th:if="${!restablece}"><strong>[[#{ti.usuario.crear}]]</strong></h4>
                                 <h4 class="text-white" th:if="${restablece}"><strong>[[#{ti.usuario.restablece}]]</strong></h4>
                             </div>
-                            <div th:if="${!restablece}" class="card-body bg-dark text-white">
+                            <div th:if="${!restablece}" class="card-body">
                                 <form method="POST" th:action="@{/usuario/create}" th:object="${dto}" class="was-validated">
                                     <div class="form-group">
                                         <label for="username" th:text="#{ti.usuario.username}">username</label>
@@ -42,7 +42,7 @@
                                     </div>
                                 </form>
                             </div>
-                            <div th:if="${restablece}" class="card-body bg-dark text-white">
+                            <div th:if="${restablece}" class="card-body">
                                 <form method="POST" th:action="@{/password/reset}" th:object="${dto}" class="was-validated">
                                     <input type="hidden" name="password" value="-"/>
                                     <div class="form-group">

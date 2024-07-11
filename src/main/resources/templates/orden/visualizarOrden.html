@@ -8,7 +8,7 @@
     </head>
     <body>
         <section id="orden" th:fragment="verOrden">
-            <section class="py-2 bg-dark text-white" id="main-header">
+            <section class="py-2" id="main-header">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
@@ -41,7 +41,7 @@
                                 </div>
                                 <h4>[[#{ti.orden}]]</h4>
                             </div>
-                                <table class="table table-dark table-striped">
+                                <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th th:text="#{ti.clientes}"></th>
@@ -66,7 +66,7 @@
                                         <td>
                                             <!-- Tabla de Ordenes -->
                                             <div th:if="${orden.productos != null and !orden.productos.empty}">
-                                                <table class="table table-dark table-striped">
+                                                <table class="table table-striped">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -94,7 +94,7 @@
                                             <div th:if="${orden.observaciones != null and orden.observaciones != ''}">
                                                 <div class="form-group">
                                                     <label for="floatingTextarea">[[#{ti.observaciones}]]</label>
-                                                    <textarea class="form-control bg-dark text-white" placeholder="Sin observaciones" id="floatingTextarea" rows="3" readonly>
+                                                    <textarea class="form-control" placeholder="Sin observaciones" id="floatingTextarea" rows="3" readonly>
                                                         [[${orden.observaciones}]]
                                                     </textarea>
                                                 </div>
@@ -102,7 +102,7 @@
                                         </td>
                                     </tbody>
                                 </table>
-                            <div class="card-footer bg-dark"></div>
+                            <div class="card-footer"></div>
                         </div>
                     </div>
                 </div>

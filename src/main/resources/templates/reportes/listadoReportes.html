@@ -8,7 +8,7 @@
 </head>
 <body>
 <section id="reportes" th:fragment="listadoReportes">
-    <section class="py-2 bg-dark text-white" id="main-header">
+    <section class="py-2" id="main-header">
         <div class="container">
 
             <div class="row">
@@ -30,7 +30,7 @@
                     </div>
                     <!-- Tabla de Reportes -->
                     <div th:if="${reportes != null and !reportes.empty}">
-                        <table class="table table-dark table-striped">
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>#</th>
