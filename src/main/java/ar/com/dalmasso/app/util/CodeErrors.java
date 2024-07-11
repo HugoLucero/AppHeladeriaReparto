@@ -13,4 +13,6 @@ public enum CodeErrors {
     PASSWORD_NOT_1234,
     PASSWORD_NOT_REGEX,
     PASSWORD_NOT_LENGTH,
+    USER_INVALID,
+    LOGOUT
 }

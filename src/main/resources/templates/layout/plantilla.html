@@ -82,7 +82,7 @@
                 /*]]>*/
                 function hayAlerta() {
                     if(message != null && message.length > 0) {
-                        let mess = type === 'error' ? setErrorMessages() : message;
+                        let mess = type === 'error' || type === 'warning' ? setErrorMessages() : message;
                         switch (type) {
                             case "success":
                                 toastr.success(mess);
@@ -107,6 +107,8 @@
                         'PASSWORD_NOT_1234': 'La contraseña no puede ser 1234, 1111, 1234567890, 0000',
                         'PASSWORD_NOT_REGEX': 'La contraseña debe tener al menos 8 caracteres, al menos una letra y un número',
                         'PASSWORD_NOT_LENGTH': 'La contraseña no puede ser menor a 8 caracteres',
+                        'USER_INVALID': 'El usuario o contraseña son incorrectos.',
+                        'LOGOUT': 'Has sido desconectado correctamente',
                     }
                     for (let errorListKey in errorList) {
                         if(message.includes(errorListKey)){
