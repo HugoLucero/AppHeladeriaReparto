@@ -81,10 +81,10 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     @Override
-    public UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException {
+    public UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException, ErrorHandler {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         Date parsed = format.parse(usuarioDto.getFechaNacimiento());
-        Usuario usuario = usuarioDao.findByToken(usuarioDto.getToken()).orElseThrow(() -> new UsernameNotFoundException(CodeErrors.TOKEN_INCORRECT.name()));
+        Usuario usuario = usuarioDao.findByUsername(usuarioDto.getUsername().trim()).orElseThrow(() -> new UsernameNotFoundException(CodeErrors.USER_INVALID.name()));
 
         if(Objects.nonNull(usuarioDto.getUsername()) && !usuario.getUsername().equals(usuarioDto.getUsername()))
             usuario.setUsername(usuarioDto.getUsername());
@@ -92,9 +92,13 @@ public class UserManagerServiceImpl implements UserManagerService {
             usuario.setMail(usuarioDto.getMail());
         if(Objects.nonNull(usuarioDto.getFechaNacimiento()) && !usuario.getFechaNacimiento().equals(parsed))
             usuario.setFechaNacimiento(parsed);
+        if(Objects.nonNull(usuarioDto.getPassword()) && !usuarioDto.getPassword().equals("null")) {
+            validatePassword(usuarioDto.getPassword());
+            validateSetPassword(usuarioDto.getPassword(), usuario.getPassword());
+            usuario.setPassword(EncriptPass.encriptarPassword(usuarioDto.getPassword()));
+        }
 
         usuarioDao.saveAndFlush(usuario);
-
         return entity2Dto(usuario);
     }
 
@@ -138,7 +142,7 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     private UsuarioDto entity2Dto(Usuario user){
-        return new UsuarioDto(user.getUsername(), null, user.getMail(), user.getFechaNacimiento().toString(), Utiles.decodeB64(user.getToken()), null);
+        return new UsuarioDto(user.getUsername(), "", user.getMail(), user.getFechaNacimiento().toString(), Utiles.decodeB64(user.getToken()), null);
     }
 
     private void validatePassword(String password) throws ErrorHandler {
@@ -156,5 +160,13 @@ public class UserManagerServiceImpl implements UserManagerService {
         }else if (!password.matches(regex)) {
             throw new ErrorHandler(CodeErrors.PASSWORD_NOT_REGEX.name());
         }
+    }
+
+    private void validateSetPassword(String newPassword, String oldPassword) throws ErrorHandler {
+        if (newPassword.isEmpty() || newPassword.equals("null"))
+            throw new ErrorHandler(CodeErrors.PASSWORD_EMPTY.name());
+        if (Boolean.FALSE.equals(EncriptPass.matchPassword(oldPassword, newPassword)))
+            throw new ErrorHandler(CodeErrors.PASSWORD_EQUAL.name());
+
     }
 }

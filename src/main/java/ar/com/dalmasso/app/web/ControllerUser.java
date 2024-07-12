@@ -31,7 +31,8 @@ public class ControllerUser {
     // MVC
 
     @GetMapping(value = "/")
-    public String createOrEditUser(Model model, @RequestParam String username, @RequestParam boolean restablece) {
+    public String createOrEditUserView(Model model, @RequestParam String username, @RequestParam boolean restablece,
+                                   @RequestParam(required = false) Boolean edit) {
         UsuarioDto usuarioDto;
         if(Objects.nonNull(username) && !username.isEmpty())
             usuarioDto = userManagerService.getUserDtoByUsername(username);
@@ -39,6 +40,7 @@ public class ControllerUser {
             usuarioDto = new UsuarioDto();
 
         model.addAttribute("dto", usuarioDto);
+        model.addAttribute("edit", edit);
         model.addAttribute(RESTABLECE, restablece);
         return RETURN_USUARIO;
     }
@@ -46,18 +48,23 @@ public class ControllerUser {
 
 
     @PostMapping(value = "/create")
-    public String createOrEditUser(Model model, @ModelAttribute @Valid UsuarioDto dto) {
+    public String createOrEditUser(Model model, @ModelAttribute @Valid UsuarioDto dto,
+                                   @RequestParam(required = false) Boolean edit) {
 
        try {
            UsuarioDto usuarioDto = new UsuarioDto();
-           if(Objects.nonNull(dto))
-               usuarioDto = userManagerService.createUser(dto);
+           if(Objects.nonNull(dto)) {
+               if (Boolean.TRUE.equals(edit))
+                   usuarioDto = userManagerService.editUser(dto);
+               else
+                   usuarioDto = userManagerService.createUser(dto);
+           }
 
            model.addAttribute("dto", usuarioDto);
            model.addAttribute(RESTABLECE, false);
-           model.addAttribute(MENSAJE_ALERTA, "Usuario creado correctamente");
+           model.addAttribute(MENSAJE_ALERTA, edit ? "Usuario editado correctamente" : "Usuario creado correctamente");
            model.addAttribute(TIPO_ALERTA, "success");
-           return "usuario/token";
+           return edit ? createOrEditUserView(model, usuarioDto.getUsername(), false, true) : "usuario/token";
        } catch (Exception e) {
            UsuarioDto usuarioDto = new UsuarioDto();
             usuarioDto.setToken("Error de token");
@@ -65,7 +72,8 @@ public class ControllerUser {
            model.addAttribute(RESTABLECE, false);
            model.addAttribute(MENSAJE_ALERTA, e.getMessage());
            model.addAttribute(TIPO_ALERTA, "error");
-           return RETURN_USUARIO;
+
+           return edit ? createOrEditUserView(model, dto.getUsername(), false, true) : RETURN_USUARIO;
        }
     }
 

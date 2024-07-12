@@ -17,7 +17,7 @@ public interface UserManagerService {
 
     UsuarioDto createUser(UsuarioDto usuarioDto) throws ParseException, ErrorHandler;
 
-    UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException;
+    UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException, ErrorHandler;
 
     void setToken2User(String username, String token);
 
