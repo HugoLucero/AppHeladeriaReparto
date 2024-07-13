@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity link) throws Exception {
         link.authorizeRequests()
                 .antMatchers("/editarProducto/**", "/agregarProducto/**", "/eliminarProducto", "/guardarCargaProducto/**", "/editarExistencia/**"
-                , "/eliminarOrden", "/reportesInicio/**", "/agregarOrden/**")
+                , "/eliminarOrden", "/reportesInicio/**", "/agregarOrden/**", "/usuario/getUsers", "/usuario/delete", "usuario/changeRoles")
                 .hasRole("ADMIN")
                 .antMatchers("/")
                 .hasAnyRole("USER", "ADMIN")

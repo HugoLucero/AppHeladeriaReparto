@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head th:replace="layout/plantilla :: head">
+    <title>Login</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<header th:replace="layout/plantilla :: header"></header>
+
+<section id="usuarios">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-center">
+                        <h4 th:text="#{ti.usuario} + 's'"></h4>
+                    </div>
+                    <div th:if="${alertaRol}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Permisos actualizados correctamente!.</strong>
+                        Puedes visualizar tus cambios aqu&iacute; abajo.
+                        <i class="fas fa-arrow-down"></i>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div th:if="${userList != null and !userList.empty}" class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th th:text="#{ti.usuario.username}"></th>
+                                <th th:text="#{ti.usuario.email}"></th>
+                                <th th:text="#{ti.usuario.birthday}"></th>
+                                <th th:text="#{ti.usuario.rol}"></th>
+                                <th>Acci&oacute;n</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user, contador : ${userList}">
+                                <td th:text="${contador.count}"></td>
+                                <td th:text="${user.username}"></td>
+                                <td th:text="${user.mail}"></td>
+                                <td th:text="${user.fechaNacimiento}"></td>
+                                <td>
+                                    <div th:each="rol, contador : ${user.roles}">
+                                        <span th:text="${rol} == 'ROLE_ADMIN' ? 'Administrador' : ''"></span>
+                                        <span th:text="${rol} == 'ROLE_USER' ? 'Vendedor' : ''"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-warning dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-expanded="false">Modificar
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item bg-gradient"
+                                                   th:href="@{/usuario/?username=} + ${user.username} + '&restablece=false&edit=true&principal=true'"
+                                                   th:text="#{accion.editar}"></a></li>
+                                            <li><a class="dropdown-item bg-gradient" href="#" data-bs-toggle="modal"
+                                                   th:data-bs-target="'#agregarRol' + ${user.username}"
+                                                   th:text="#{ti.usuario.rol}"></a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item bg-danger bg-gradient" href="#"
+                                                   data-bs-toggle="modal"
+                                                   th:data-bs-target="'#deleteUser' + ${user.username}"
+                                                   th:text="#{accion.eliminar}"></a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+
+<!--                                MODAL ROL-->
+                                <div class="modal fade" th:id="'agregarRol' + ${user.username}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title text-dark" th:text="${user.username}"></h5>
+                                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                                        type="button"></button>
+                                            </div>
+                                            <form class="was-validated" method="POST"
+                                                  th:action="@{/usuario/changeRoles} + '?username=' + ${user.username}">
+                                                <div class="modal-body">
+                                                    <div class="form-check" th:each="rol, contador : ${roles}">
+                                                        <input class="form-check-input"
+                                                               th:id="'rol' + ${contador.count}" th:name="rol"
+                                                               th:value="${rol}" type="checkbox">
+                                                        <label th:for="'rol' + ${contador.count}">[[${rol} ==
+                                                            'ROLE_USER' ? 'Vendedor' : 'Administrador']]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="form-group">
+                                                        <div class="row g-3 align-items-center">
+                                                            <div class="col-auto">
+                                                                <label for="token2" class="col-form-label"
+                                                                       th:text="#{ti.token}"></label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <input th:name="token" type="password" id="token2"
+                                                                       class="form-control"
+                                                                       aria-describedby="passwordHelpInline" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-warning" th:text="#{accion.guardar}"
+                                                            type="submit">Guardar
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+<!--                                MODAL ELIMINAR-->
+                                <div class="modal fade" th:id="'deleteUser' + ${user.username}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title text-dark" th:text="${user.username}"></h5>
+                                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                                        type="button"></button>
+                                            </div>
+                                            <form class="was-validated" method="POST"
+                                                  th:action="@{/usuario/delete} + '?username=' + ${user.username}">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <div class="row g-3 align-items-center">
+                                                            <div class="col-auto">
+                                                                <label for="token" class="col-form-label"
+                                                                       th:text="#{ti.token}"></label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <input th:name="token" type="password" id="token"
+                                                                       class="form-control"
+                                                                       aria-describedby="passwordHelpInline" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+
+                                                    <button class="btn btn-warning" th:text="#{accion.eliminar}"
+                                                            type="submit"></button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:replace="layout/plantilla :: footer"></footer>
+</body>
+</html>

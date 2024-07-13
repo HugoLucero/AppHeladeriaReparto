@@ -1,6 +1,5 @@
 package ar.com.dalmasso.app.service;
 
-import ar.com.dalmasso.app.dao.RolRepository;
 import ar.com.dalmasso.app.dao.UsuarioDao;
 import ar.com.dalmasso.app.domain.Rol;
 import ar.com.dalmasso.app.domain.Usuario;
@@ -8,29 +7,37 @@ import ar.com.dalmasso.app.dto.UsuarioDto;
 import ar.com.dalmasso.app.util.CodeErrors;
 import ar.com.dalmasso.app.util.EncriptPass;
 import ar.com.dalmasso.app.util.ErrorHandler;
+import ar.com.dalmasso.app.util.RolesEnum;
 import ar.com.dalmasso.app.util.Utiles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UserManagerServiceImpl implements UserManagerService {
 
 
     private final UsuarioDao usuarioDao;
-    private final RolRepository rolDao;
 
     @Autowired
-    public UserManagerServiceImpl(UsuarioDao usuarioDao, RolRepository rolDao) {
+    public UserManagerServiceImpl(UsuarioDao usuarioDao) {
         this.usuarioDao = usuarioDao;
-        this.rolDao = rolDao;
     }
 
     @Override
@@ -82,7 +89,7 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     @Override
     public UsuarioDto editUser(UsuarioDto usuarioDto) throws ParseException, ErrorHandler {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date parsed = format.parse(usuarioDto.getFechaNacimiento());
         Usuario usuario = usuarioDao.findByUsername(usuarioDto.getUsername().trim()).orElseThrow(() -> new UsernameNotFoundException(CodeErrors.USER_INVALID.name()));
 
@@ -115,24 +122,56 @@ public class UserManagerServiceImpl implements UserManagerService {
             throw new ErrorHandler(CodeErrors.ROLES_NULL_EMPTY.name());
 
 
-        Usuario usuario = getUserByUsername(userName);
-        String tokenDecoded = Utiles.decodeB64(usuario.getToken());
-        if (!tokenDecoded.equals(token))
-            throw new ErrorHandler(CodeErrors.TOKEN_NOT_EQUAL.name());
+        validateUserLogged(token);
 
+        Usuario usuario = getUserByUsername(userName);
 
         List<Rol> rolList = usuario.getRoles();
         for (String rol : roles) {
-            Rol r = rolDao.findByNombreIgnoreCase(rol);
-            rolList.add(Objects.requireNonNull(r, CodeErrors.ROL_NOT_FOUND.name()));
+            if (rolList.stream().noneMatch(rol1 -> rol1.getNombre().equals(rol)))
+                rolList.add(new Rol(null, rol));
         }
         usuarioDao.saveAndFlush(usuario);
 
         return entity2Dto(usuario);
     }
 
+    private void validateUserLogged(String token) throws ErrorHandler {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
+        }
+        Usuario loggedUser = getUserByUsername(username);
+        String tokenDecoded = Utiles.decodeB64(loggedUser.getToken());
+        if (!tokenDecoded.equals(token))
+            throw new ErrorHandler(CodeErrors.TOKEN_NOT_EQUAL.name());
+    }
+
+    @Override
+    public Page<UsuarioDto> getUsers(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return usuarioDao.findAll(pageable).map(this::entity2Dto);
+    }
+
+    @Override
+    public List<String> getRoles() {
+        return Arrays.stream(RolesEnum.values()).map(Enum::name).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(String usernameToDelete, String tokenUserLogged) throws ErrorHandler {
+        validateUserLogged(tokenUserLogged);
+        if (!usuarioDao.existsByUsernameIgnoreCase(usernameToDelete))
+            throw new ErrorHandler(CodeErrors.USER_NOT_FOUND.name());
+        usuarioDao.delete(getUserByUsername(usernameToDelete));
+    }
+
     private Usuario dto2Entity(UsuarioDto dto) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date parsed = format.parse(dto.getFechaNacimiento());
         Usuario user = new Usuario();
         user.setUsername(dto.getUsername());
@@ -142,7 +181,8 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     private UsuarioDto entity2Dto(Usuario user){
-        return new UsuarioDto(user.getUsername(), "", user.getMail(), user.getFechaNacimiento().toString(), Utiles.decodeB64(user.getToken()), null);
+        return new UsuarioDto(user.getUsername(), "", user.getMail(), user.getFechaNacimiento().toString(),
+                Utiles.decodeB64(user.getToken()), user.getRoles().stream().map(Rol::getNombre).collect(Collectors.toList()));
     }
 
     private void validatePassword(String password) throws ErrorHandler {
