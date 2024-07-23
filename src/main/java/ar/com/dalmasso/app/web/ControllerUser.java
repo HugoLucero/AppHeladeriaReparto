@@ -37,7 +37,7 @@ public class ControllerUser {
 
     @GetMapping(value = "/")
     public String createOrEditUserView(Model model, @RequestParam String username, @RequestParam boolean restablece,
-                                       @RequestParam(required = false) Boolean edit,
+                                       @RequestParam(required = false, defaultValue = "false") Boolean edit,
                                        @RequestParam(required = false, defaultValue = "false") Boolean principal) {
         UsuarioDto usuarioDto;
         if (Objects.nonNull(username) && !username.isEmpty())

@@ -28,22 +28,22 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0" sec:authorize="isAuthenticated()">
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/vender/}">Vender</a>
+                                <a class="nav-link text-success-emphasis" th:href="@{/vender/}">Vender</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/clientesInicio}">Clientes</a>
+                                <a class="nav-link text-danger-emphasis" th:href="@{/clientesInicio}">Clientes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/productosInicio}">Productos</a>
+                                <a class="nav-link text-warning-emphasis" th:href="@{/productosInicio}">Productos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/ordenesInicio}">Ventas Realizadas</a>
+                                <a class="nav-link text-info-emphasis" th:href="@{/ordenesInicio}">Ventas Realizadas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/cargasInicio}">Cargas</a>
+                                <a class="nav-link text-primary-emphasis" th:href="@{/cargasInicio}">Cargas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/reportesInicio}">[[#{ti.reportes}]]</a>
+                                <a class="nav-link text-primary-emphasis" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/reportesInicio}">[[#{ti.reportes}]]</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/usuario/getUsers}">[[#{ti.usuario} + 's']]</a>

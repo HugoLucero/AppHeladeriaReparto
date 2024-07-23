@@ -46,7 +46,8 @@
                                             <span th:if="${!edit}">[[#{form.crear}]]</span>
                                             <span th:if="${edit}">[[#{form.guardar}]]</span>
                                         </button>
-                                        <button type="button" th:if="${!principal}" onclick="window.location='/login'" value="Login" class="btn btn-danger">[[#{form.cancelar}]]</button>
+                                        <button type="button" th:if="${!principal && !edit}" onclick="window.location='/login'" value="Login" class="btn btn-danger">[[#{form.cancelar}]]</button>
+                                        <button type="button" th:if="${edit}" onclick="window.history.back()" value="Login" class="btn btn-danger">[[#{form.cancelar}]]</button>
                                         <button type="button" th:if="${principal}" onclick="window.location='/usuario/getUsers'" value="Login" class="btn btn-danger">[[#{form.cancelar}]]</button>
                                     </div>
                                 </form>
